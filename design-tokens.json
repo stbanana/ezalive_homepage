@@ -1,0 +1,13 @@
+{
+  "brand": {
+    "primary": "#0066CC",
+    "secondary": "#0A2540",
+    "accent": "#FF7A59",
+    "muted": "#F5F7FA",
+    "text": "#0B2540"
+  },
+  "fonts": {
+    "heading": "Inter, ui-sans-serif, system-ui, -apple-system",
+    "body": "Inter, ui-sans-serif, system-ui, -apple-system"
+  }
+}
