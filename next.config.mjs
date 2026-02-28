@@ -9,7 +9,8 @@ const config = {
   reactStrictMode: true,
   output: 'export',
   images: { unoptimized: true },
-  trailingSlash: true
+  trailingSlash: true,
+  // assetPrefix: './',
 };
 
 export default withMDX(config);
