@@ -1,3 +1,4 @@
+/* @import "@carbon/styles/css/styles.css"; */
 @import "tailwindcss";
 @import "fumadocs-ui/css/neutral.css";
 @import "fumadocs-ui/css/preset.css";
@@ -6,6 +7,10 @@
   color-scheme: light;
   /* Carbon Design System 主色与字体变量，仅保留核心token */
   --cds-interactive-primary: #0f62fe;
+  --cds-interactive-primary-hover: #0353e9;
+  --cds-interactive-primary-active: #002d9c;
+  --cds-layer-hover: #e5f0ff;
+  --cds-layer-active: #d0e2ff;
   --cds-text-on-color: #fff;
   --cds-border-subtle: #e0e0e0;
   --cds-background: #f4f4f4;
@@ -13,9 +18,19 @@
   --cds-text-primary: #161616;
   --cds-text-secondary: #525252;
   --cds-support-success: #24a148;
+  --cds-support-success-hover: #198038;
+  --cds-support-success-active: #0e6027;
   --cds-support-warning: #f1c21b;
+  --cds-support-warning-hover: #be9b0b;
+  --cds-support-warning-active: #8e6a00;
   --cds-support-error: #da1e28;
+  --cds-support-error-hover: #ba1b23;
+  --cds-support-error-active: #750e13;
+  --cds-support-error-background-hover: #ffd6d9;
+  --cds-support-error-background-active: #ffd6d9;
   --cds-support-info: #0f62fe;
+  --cds-support-info-hover: #0353e9;
+  --cds-support-info-active: #002d9c;
   --cds-font-sans:
     "IBM Plex Sans", "Helvetica Neue", Arial, "Liberation Sans", sans-serif;
 

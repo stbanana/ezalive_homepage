@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react';
+import CdsButton from '@/components/ui/cds-button';
 import LanguageNotice from '@/components/LanguageNotice';
 import { getMdxComponents } from '@/mdx-components';
 
@@ -44,18 +45,22 @@ export default async function HomePage({ params }: PageProps) {
                     : 'Ezalive focuses on high-precision power electronics test platforms for reliable R&D and validation.'}
                 </p>
                 <div className="flex flex-wrap gap-3">
-                  <a
-                    className="inline-flex items-center justify-center rounded-md bg-fd-primary px-4 py-2 text-sm font-medium text-fd-primary-foreground shadow-sm"
+                  <CdsButton
+                    as="a"
                     href={`/${locale}/products`}
+                    variant="primary"
+                    radius="0.5rem"
                   >
                     {locale === 'zh' ? '了解产品' : 'Explore Products'}
-                  </a>
-                  <a
-                    className="inline-flex items-center justify-center rounded-md border border-fd-border bg-fd-background/70 px-4 py-2 text-sm font-medium text-fd-foreground"
+                  </CdsButton>
+                  <CdsButton
+                    as="a"
                     href={`/${locale}#contact`}
+                    variant="secondary"
+                    radius="0.5rem"
                   >
                     {locale === 'zh' ? '联系咨询' : 'Contact Us'}
-                  </a>
+                  </CdsButton>
                 </div>
               </div>
               <div className="flex items-center justify-center">
