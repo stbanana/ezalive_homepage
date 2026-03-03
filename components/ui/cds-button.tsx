@@ -4,11 +4,12 @@ import React from "react";
 export type ButtonVariant =
     | "primary"
     | "secondary"
-    | "tertiary"
+    | "danger"
     | "ghost"
-    | "danger-primary"
-    | "danger-tertiary"
-    | "danger-ghost";
+    | "danger--primary"
+    | "danger--ghost"
+    | "danger--tertiary"
+    | "tertiary";
 
 type BaseProps = {
     variant?: ButtonVariant;
@@ -32,43 +33,49 @@ type ButtonAsAnchor = BaseProps & {
 
 export type ButtonProps = ButtonAsButton | ButtonAsAnchor;
 
+// 变量映射严格参考 Carbon React Button 设计
 const variantStyleMap: Record<ButtonVariant, React.CSSProperties> = {
     primary: {
-        background: 'var(--cds-interactive-primary)',
-        color: 'var(--cds-text-on-color)',
-        borderColor: 'var(--cds-interactive-primary)',
+        background: 'var(--cds-button-primary, #0f62fe)',
+        color: 'var(--cds-text-on-color, #fff)',
+        borderColor: 'var(--cds-button-primary, #0f62fe)',
     },
     secondary: {
-        background: 'var(--cds-layer)',
-        color: 'var(--cds-interactive-primary)',
-        borderColor: 'var(--cds-interactive-primary)',
+        background: 'var(--cds-button-secondary, #393939)',
+        color: 'var(--cds-text-on-color, #fff)',
+        borderColor: 'var(--cds-button-secondary, #393939)',
     },
-    tertiary: {
-        background: 'transparent',
-        color: 'var(--cds-interactive-primary)',
-        borderColor: 'transparent',
+    danger: {
+        background: 'var(--cds-button-danger-primary, #da1e28)',
+        color: 'var(--cds-text-on-color, #fff)',
+        borderColor: 'var(--cds-button-danger-primary, #da1e28)',
     },
     ghost: {
-        background: 'transparent',
-        color: 'var(--cds-interactive-primary)',
-        borderColor: 'transparent',
+        background: 'var(--cds-background, #ffffff)',
+        color: 'var(--cds-button-primary, #0f62fe)',
+        borderColor: 'var(--cds-background, #ffffff)',
         boxShadow: 'none',
     },
-    'danger-primary': {
-        background: '#da1e28',
-        color: '#fff',
-        borderColor: '#da1e28',
+    'danger--primary': {
+        background: 'var(--cds-button-danger-primary, #da1e28)',
+        color: 'var(--cds-text-on-color, #fff)',
+        borderColor: 'var(--cds-button-danger-primary, #da1e28)',
     },
-    'danger-tertiary': {
-        background: 'transparent',
-        color: '#da1e28',
-        borderColor: 'transparent',
-    },
-    'danger-ghost': {
-        background: 'transparent',
-        color: '#da1e28',
-        borderColor: 'transparent',
+    'danger--ghost': {
+        background: 'var(--cds-background, #fff)',
+        color: 'var(--cds-button-danger-secondary, #da1e28)',
+        borderColor: 'var(--cds-background, #fff)',
         boxShadow: 'none',
+    },
+    'danger--tertiary': {
+        background: 'var(--cds-text-on-color, #fff)',
+        color: 'var(--cds-button-danger-secondary, #da1e28)',
+        borderColor: 'var(--cds-button-danger-secondary, #da1e28)',
+    },
+    tertiary: {
+        background: 'var(--cds-text-on-color, #fff)',
+        color: 'var(--cds-button-primary, #0050e6)',
+        borderColor: 'var(--cds-button-primary, #0050e6)',
     },
 };
 
@@ -106,55 +113,86 @@ export const CdsButton: React.FC<ButtonProps> = (props) => {
         ...style,
     };
     // 交互色彩
+    // 交互色彩严格对齐 Carbon 设计
     if (variant === 'primary') {
         if (active) {
-            baseStyle.background = 'var(--cds-interactive-primary-active, #002d9c)';
-            baseStyle.borderColor = 'var(--cds-interactive-primary-active, #002d9c)';
+            baseStyle.background = 'var(--cds-button-primary-active, #002d9c)';
+            baseStyle.borderColor = 'var(--cds-button-primary-active, #002d9c)';
+            baseStyle.color = 'var(--cds-text-on-color, #fff)';
         } else if (hovered) {
-            baseStyle.background = 'var(--cds-interactive-primary-hover, #0353e9)';
-            baseStyle.borderColor = 'var(--cds-interactive-primary-hover, #0353e9)';
+            baseStyle.background = 'var(--cds-button-primary-hover, #0050e6)';
+            baseStyle.borderColor = 'var(--cds-button-primary-hover, #0050e6)';
+            baseStyle.color = 'var(--cds-text-on-color, #fff)';
         }
     } else if (variant === 'secondary') {
         if (active) {
-            baseStyle.background = 'var(--cds-layer-active, #d0e2ff)';
-            baseStyle.color = 'var(--cds-interactive-primary-active, #002d9c)';
-            baseStyle.borderColor = 'var(--cds-interactive-primary-active, #002d9c)';
+            baseStyle.background = 'var(--cds-button-secondary-active, #6f6f6f)';
+            baseStyle.borderColor = 'var(--cds-button-secondary-active, #6f6f6f)';
+            baseStyle.color = 'var(--cds-text-on-color, #fff)';
         } else if (hovered) {
-            baseStyle.background = 'var(--cds-layer-hover, #e5f0ff)';
-            baseStyle.color = 'var(--cds-interactive-primary-hover, #002d9c)';
-            baseStyle.borderColor = 'var(--cds-interactive-primary-hover, #002d9c)';
+            baseStyle.background = 'var(--cds-button-secondary-hover, #474747)';
+            baseStyle.borderColor = 'var(--cds-button-secondary-hover, #474747)';
+            baseStyle.color = 'var(--cds-text-on-color, #fff)';
+        }
+    } else if (variant === 'danger') {
+        if (active) {
+            baseStyle.background = 'var(--cds-button-danger-active, #750e13)';
+            baseStyle.borderColor = 'var(--cds-button-danger-active, #750e13)';
+            baseStyle.color = 'var(--cds-text-on-color, #fff)';
+        } else if (hovered) {
+            baseStyle.background = 'var(--cds-button-danger-hover, #b81921)';
+            baseStyle.borderColor = 'var(--cds-button-danger-hover, #b81921)';
+            baseStyle.color = 'var(--cds-text-on-color, #fff)';
         }
     } else if (variant === 'tertiary') {
         if (active) {
-            baseStyle.background = 'var(--cds-layer-active, #d0e2ff)';
-            baseStyle.color = 'var(--cds-interactive-primary-active, #002d9c)';
+            baseStyle.background = 'var(--cds-button-tertiary-active, #002d9c)';
+            baseStyle.borderColor = 'var(--cds-button-tertiary-active, #002d9c)';
+            baseStyle.color = 'var(--cds-text-on-color, #fff)';
         } else if (hovered) {
-            baseStyle.background = 'var(--cds-layer-hover, #e5f0ff)';
-            baseStyle.color = 'var(--cds-interactive-primary-hover, #002d9c)';
+            baseStyle.background = 'var(--cds-button-tertiary-hover, #0050e6)';
+            baseStyle.borderColor = 'var(--cds-button-tertiary-hover, #0050e6)';
+            baseStyle.color = 'var(--cds-text-on-color, #fff)';
         }
     } else if (variant === 'ghost') {
         if (active) {
-            baseStyle.background = 'var(--cds-layer-active, #d0e2ff)';
-            baseStyle.color = 'var(--cds-interactive-primary-active, #002d9c)';
+            baseStyle.background = 'var(--cds-background-active, rgba(141, 141, 141, 0.5))';
+            baseStyle.borderColor = 'var(--cds-background-active, rgba(141, 141, 141, 0.5))';
+            baseStyle.color = 'var(--cds-button-primary, #0f62fe)';
         } else if (hovered) {
-            baseStyle.background = 'var(--cds-layer-hover, #e5f0ff)';
-            baseStyle.color = 'var(--cds-interactive-primary-hover, #002d9c)';
+            baseStyle.background = 'var(--cds-background-hover, rgba(141, 141, 141, 0.12))';
+            baseStyle.borderColor = 'var(--cds-background-hover, rgba(141, 141, 141, 0.12))';
+            baseStyle.color = 'var(--cds-button-primary, #0f62fe)';
         }
-    } else if (variant === 'danger-primary') {
+    } else if (variant === 'danger--primary') {
         if (active) {
-            baseStyle.background = 'var(--cds-support-error-active, #750e13)';
-            baseStyle.borderColor = 'var(--cds-support-error-active, #750e13)';
+            baseStyle.background = 'var(--cds-button-danger-active, #750e13)';
+            baseStyle.borderColor = 'var(--cds-button-danger-active, #750e13)';
+            baseStyle.color = 'var(--cds-text-on-color, #fff)';
         } else if (hovered) {
-            baseStyle.background = 'var(--cds-support-error-hover, #ba1b23)';
-            baseStyle.borderColor = 'var(--cds-support-error-hover, #ba1b23)';
+            baseStyle.background = 'var(--cds-button-danger-hover, #b81921)';
+            baseStyle.borderColor = 'var(--cds-button-danger-hover, #b81921)';
+            baseStyle.color = 'var(--cds-text-on-color, #fff)';
         }
-    } else if (variant === 'danger-tertiary' || variant === 'danger-ghost') {
+    } else if (variant === 'danger--ghost') {
         if (active) {
-            baseStyle.background = 'var(--cds-support-error-background-active, #ffd6d9)';
-            baseStyle.color = 'var(--cds-support-error-active, #750e13)';
+            baseStyle.background = 'var(--cds-button-danger-primary, #da1e28)';
+            baseStyle.borderColor = 'var(--cds-button-danger-active, #750e13)';
+            baseStyle.color = 'var(--cds-text-on-color, #fff)';
         } else if (hovered) {
-            baseStyle.background = 'var(--cds-support-error-background-hover, #ffd6d9)';
-            baseStyle.color = 'var(--cds-support-error-hover, #ba1b23)';
+            baseStyle.background = 'var(--cds-button-danger-hover, #b81921)';
+            baseStyle.borderColor = 'var(--cds-button-danger-hover, #b81921)';
+            baseStyle.color = 'var(--cds-text-on-color, #fff)';
+        }
+    } else if (variant === 'danger--tertiary') {
+        if (active) {
+            baseStyle.background = 'var(--cds-button-danger-primary, #da1e28)';
+            baseStyle.borderColor = 'var(--cds-button-danger-active, #750e13)';
+            baseStyle.color = 'var(--cds-text-on-color, #fff)';
+        } else if (hovered) {
+            baseStyle.background = 'var(--cds-button-danger-hover, #b81921)';
+            baseStyle.borderColor = 'var(--cds-button-danger-hover, #b81921)';
+            baseStyle.color = 'var(--cds-text-on-color, #fff)';
         }
     }
 

@@ -56,7 +56,7 @@ export default async function HomePage({ params }: PageProps) {
                   <CdsButton
                     as="a"
                     href={`/${locale}#contact`}
-                    variant="secondary"
+                    variant="tertiary"
                     radius="0.5rem"
                   >
                     {locale === 'zh' ? '联系咨询' : 'Contact Us'}
