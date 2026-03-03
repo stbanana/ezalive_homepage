@@ -20,6 +20,13 @@
 - 按照 AI/TODO.md 推进任务
 - 设计文档.md 保持与实际实现同步
 
+
+## 组件命名与变量命名约定
+
+- 所有 Carbon Design System 相关主题变量均以 --cds- 前缀命名，禁止硬编码色值。自建组件变量不强制使用 cds- 前缀。
+- 仅手动维护 Carbon Design System token，不引入 Carbon 组件和全局 reset。
+- 组件 props 类型安全，<button>/<a> 区分，类型严格校验。
+
 ## 组件选用与显示效果原则
 
 1. MDX 文件优先使用传统 Markdown 语法实现显示效果（如图片、表格、列表等）。
