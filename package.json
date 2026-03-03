@@ -10,6 +10,7 @@
     "deploy": "next build && npx gh-pages -d out --dotfiles --cname ezalive.yono233.cn"
   },
   "dependencies": {
+    "@carbon/styles": "^1.101.0",
     "fumadocs-core": "^15.8.5",
     "fumadocs-mdx": "^14.2.8",
     "fumadocs-ui": "^15.8.5",

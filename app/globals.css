@@ -1,14 +1,42 @@
-@import 'tailwindcss';
-@import 'fumadocs-ui/css/neutral.css';
-@import 'fumadocs-ui/css/preset.css';
+@import "tailwindcss";
+@import "fumadocs-ui/css/neutral.css";
+@import "fumadocs-ui/css/preset.css";
 
 :root {
   color-scheme: light;
+  /* Carbon Design System 主色与字体变量，仅保留核心token */
+  --cds-interactive-primary: #0f62fe;
+  --cds-text-on-color: #fff;
+  --cds-border-subtle: #e0e0e0;
+  --cds-background: #f4f4f4;
+  --cds-layer: #fff;
+  --cds-text-primary: #161616;
+  --cds-text-secondary: #525252;
+  --cds-support-success: #24a148;
+  --cds-support-warning: #f1c21b;
+  --cds-support-error: #da1e28;
+  --cds-support-info: #0f62fe;
+  --cds-font-sans:
+    "IBM Plex Sans", "Helvetica Neue", Arial, "Liberation Sans", sans-serif;
+
+  /* Fumadocs 变量映射到 Carbon token */
+  --color-fd-primary: var(--cds-interactive-primary);
+  --color-fd-primary-foreground: var(--cds-text-on-color);
+  --color-fd-border: var(--cds-border-subtle);
+  --color-fd-background: var(--cds-background);
+  --color-fd-card: var(--cds-layer);
+  --color-fd-foreground: var(--cds-text-primary);
+  --color-fd-muted-foreground: var(--cds-text-secondary);
+  --color-fd-success: var(--cds-support-success);
+  --color-fd-warning: var(--cds-support-warning);
+  --color-fd-error: var(--cds-support-error);
+  --color-fd-info: var(--cds-support-info);
 }
 
 body {
   min-height: 100vh;
-  background-color: var(--color-fd-background);
+  background-color: var(--cds-background, #f4f4f4);
+  font-family: var(--cds-font-sans);
 }
 
 #nd-nav {
