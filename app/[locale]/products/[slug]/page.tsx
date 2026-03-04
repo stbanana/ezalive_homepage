@@ -1,22 +1,37 @@
-import type { ComponentType } from 'react';
+import type { CSSProperties, ComponentType } from 'react';
 import { notFound } from 'next/navigation';
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
+import { getTableOfContents } from 'fumadocs-core/content/toc';
+import { DocsBody, DocsPage } from 'fumadocs-ui/page';
+import matter from 'gray-matter';
 import { getMdxComponents } from '@/mdx-components';
-import CdsButton from '@/components/ui/cds-button';
 import { i18n } from '@/lib/i18n';
 import { products } from '@/data/products';
 
 type Locale = 'zh' | 'en';
 
+type ProductPageConfig = {
+  loader: () => Promise<{ default: ComponentType<any> }>;
+  filePath: string;
+};
+
 type PageProps = {
   params: Promise<{ locale: Locale; slug: string }>;
 };
 
-const productMdxMap: Record<Locale, Record<string, () => Promise<{ default: ComponentType<any> }>>> = {
+const productMdxMap: Record<Locale, Record<string, ProductPageConfig>> = {
   zh: {
-    ez40004: () => import('@/content/zh/products/ez40004.mdx')
+    ez40004: {
+      loader: () => import('@/content/zh/products/ez40004.mdx'),
+      filePath: 'content/zh/products/ez40004.mdx',
+    }
   },
   en: {
-    ez40004: () => import('@/content/en/products/ez40004.mdx')
+    ez40004: {
+      loader: () => import('@/content/en/products/ez40004.mdx'),
+      filePath: 'content/en/products/ez40004.mdx',
+    }
   }
 };
 
@@ -30,18 +45,40 @@ export function generateStaticParams() {
 
 export default async function ProductPage({ params }: PageProps) {
   const { locale, slug } = await params;
-  const loader = productMdxMap[locale]?.[slug];
-  if (!loader) {
+  const pageConfig = productMdxMap[locale]?.[slug];
+  if (!pageConfig) {
     notFound();
   }
 
-  const Content = (await loader()).default;
+  const mdxSource = await readFile(join(process.cwd(), pageConfig.filePath), 'utf-8');
+  const { content: markdownContent } = matter(mdxSource);
+  const toc = getTableOfContents(markdownContent);
+  const Content = (await pageConfig.loader()).default;
+  const docsPageStyle = {
+    '--fd-toc-width': '19rem',
+    '--fd-sidebar-width': '0px',
+    '--fd-page-width': '72rem',
+    '--fd-layout-offset': '1rem',
+  } as CSSProperties;
 
   return (
-    <main className="mx-auto w-full max-w-4xl px-6 py-12">
-      <div className="prose max-w-none">
+    <DocsPage
+      toc={toc}
+      tableOfContent={{
+        style: 'clerk',
+      }}
+      breadcrumb={{ enabled: false }}
+      footer={{ enabled: false }}
+      container={{
+        style: docsPageStyle,
+      }}
+      article={{
+        className: 'px-6 py-12 md:px-8',
+      }}
+    >
+      <DocsBody className="max-w-none text-fd-foreground/90">
         <Content components={getMdxComponents()} />
-      </div>
-    </main>
+      </DocsBody>
+    </DocsPage>
   );
 }
