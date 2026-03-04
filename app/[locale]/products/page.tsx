@@ -31,16 +31,16 @@ export default async function ProductsPage({ params }: PageProps) {
           {localizedProducts.map((product) => (
             <a
               key={product.slug}
-              className="group flex h-full flex-col rounded-2xl border-1 border-fd-primary/80 bg-fd-card/90 p-6 shadow-lg transition-all hover:scale-[1.03] hover:border-fd-primary/90 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fd-primary"
+              className="group flex h-full flex-col rounded-2xl border border-fd-primary/40 bg-fd-card/90 p-6 shadow-lg transition-all hover:scale-[1.03] hover:border-fd-primary hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fd-primary"
               href={`/${locale}/products/${product.slug}`}
             >
-              <div className="text-xs text-neutral-500">{locale === 'zh' ? '型号' : 'Model'}: {product.model}</div>
-              <h2 className="mt-2 text-xl font-semibold">{product.name}</h2>
-              <p className="mt-2 text-sm text-neutral-600">{product.summary}</p>
-              <div className="mt-2 text-xs text-neutral-500">
+              <div className="text-xs text-fd-primary">{locale === 'zh' ? '型号' : 'Model'}: {product.model}</div>
+              <h2 className="mt-2 text-xl font-semibold text-fd-foreground">{product.name}</h2>
+              <p className="mt-2 text-sm text-fd-muted-foreground">{product.summary}</p>
+              <div className="mt-2 text-xs text-fd-muted-foreground">
                 {locale === 'zh' ? '核心参数' : 'Core Specs'}: {product.coreSpecs.join(' · ')}
               </div>
-              <div className="mt-4 inline-flex items-center text-sm font-medium text-neutral-900 group-hover:text-fd-primary">
+              <div className="mt-4 inline-flex items-center text-sm font-medium text-fd-foreground transition-colors group-hover:text-fd-primary">
                 {dict.home.products.details} →
               </div>
             </a>

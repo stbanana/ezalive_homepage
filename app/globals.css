@@ -70,6 +70,12 @@
   padding-right: 24px;
 }
 
+#nd-nav nav [data-active='true'] {
+  background: var(--cds-tag-background-magenta);
+  border: 0.5px solid var(--cds-tag-hover-magenta);
+  border-radius: 8px;
+}
+
 @media (max-width: 768px) {
   #nd-nav {
     top: var(--fd-banner-height, 0px);
