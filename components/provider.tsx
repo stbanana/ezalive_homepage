@@ -7,7 +7,7 @@ const SearchDialog = dynamic(() => import('@/components/search'), { ssr: false }
 
 export function Provider({ children, ...props }: ComponentProps<typeof RootProvider>) {
     return (
-        <RootProvider search={{ SearchDialog }} {...props}>
+        <RootProvider search={{ SearchDialog, options: { type: 'static' } }} {...props}>
             {children}
         </RootProvider>
     );
