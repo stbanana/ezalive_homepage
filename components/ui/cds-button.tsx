@@ -148,11 +148,11 @@ export const CdsButton: React.FC<ButtonProps> = (props) => {
         if (active) {
             baseStyle.background = 'var(--cds-button-tertiary-active, #002d9c)';
             baseStyle.borderColor = 'var(--cds-button-tertiary-active, #002d9c)';
-            baseStyle.color = 'var(--cds-text-on-color, #fff)';
+            baseStyle.color = 'var(--cds-notification-action-tertiary-inverse, #0f62fe)';
         } else if (hovered) {
             baseStyle.background = 'var(--cds-button-tertiary-hover, #0050e6)';
             baseStyle.borderColor = 'var(--cds-button-tertiary-hover, #0050e6)';
-            baseStyle.color = 'var(--cds-text-on-color, #fff)';
+            baseStyle.color = 'var(--cds-notification-action-tertiary-inverse, #0f62fe)';
         }
     } else if (variant === 'ghost') {
         if (active) {
