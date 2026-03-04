@@ -1,6 +1,7 @@
 
 import ProductMenuNav from '@/components/ProductMenuNav';
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
+import { i18n } from '@/lib/i18n';
 
 type Locale = 'zh' | 'en';
 
@@ -25,6 +26,7 @@ export function baseOptions(locale: Locale): BaseLayoutProps {
   const otherLocale = locale === 'zh' ? 'en' : 'zh';
 
   return {
+    i18n,
     nav: {
       title: (
         <img

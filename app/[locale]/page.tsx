@@ -1,7 +1,9 @@
-import type { ComponentType } from 'react';
+﻿import type { ComponentType } from 'react';
 import CdsButton from '@/components/ui/cds-button';
 import LanguageNotice from '@/components/LanguageNotice';
 import { getMdxComponents } from '@/mdx-components';
+import { getDictionary } from '@/lib/dictionaries';
+import { i18n } from '@/lib/i18n';
 
 type Locale = 'zh' | 'en';
 
@@ -14,9 +16,16 @@ const homeMdxMap: Record<Locale, () => Promise<{ default: ComponentType<any> }>>
   en: () => import('@/content/en/home.mdx')
 };
 
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return i18n.languages.map((locale) => ({ locale }));
+}
+
 export default async function HomePage({ params }: PageProps) {
   const { locale } = await params;
   const Content = (await homeMdxMap[locale]()).default;
+  const dict = await getDictionary(locale);
   const gridColor =
     'color-mix(in oklab, var(--color-fd-primary) 10%, transparent)';
 
@@ -37,12 +46,10 @@ export default async function HomePage({ params }: PageProps) {
             <div className="grid gap-10 md:grid-cols-[1.1fr_0.9fr] md:items-center">
               <div className="space-y-6">
                 <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">
-                  {locale === 'zh' ? '易启测 ezalive' : '易启测 ezalive'}
+                  {dict.home.hero.title}
                 </h1>
                 <p className="text-lg text-fd-muted-foreground">
-                  {locale === 'zh'
-                    ? '易启测专注于高精度电力电子测试平台，为研发与验证提供可靠支持。'
-                    : 'Ezalive focuses on high-precision power electronics test platforms for reliable R&D and validation.'}
+                  {dict.home.hero.description}
                 </p>
                 <div className="flex flex-wrap gap-3">
                   <CdsButton
@@ -51,7 +58,7 @@ export default async function HomePage({ params }: PageProps) {
                     variant="primary"
                     radius="0.5rem"
                   >
-                    {locale === 'zh' ? '了解产品' : 'Explore Products'}
+                    {dict.home.hero.exploreBtn}
                   </CdsButton>
                   <CdsButton
                     as="a"
@@ -59,7 +66,7 @@ export default async function HomePage({ params }: PageProps) {
                     variant="tertiary"
                     radius="0.5rem"
                   >
-                    {locale === 'zh' ? '联系咨询' : 'Contact Us'}
+                    {dict.home.hero.contactBtn}
                   </CdsButton>
                 </div>
               </div>
@@ -75,28 +82,13 @@ export default async function HomePage({ params }: PageProps) {
 
           <section className="rounded-2xl border border-fd-border bg-fd-card/90 p-8 shadow-md">
             <div className="grid gap-6 md:grid-cols-3">
-              {[
-                {
-                  zh: '高精度输出与测量',
-                  en: 'High-precision output and measurement'
-                },
-                {
-                  zh: '源载双向一体化',
-                  en: 'Bidirectional source/load integration'
-                },
-                {
-                  zh: '适配多场景测试',
-                  en: 'Flexible for multi-scenario testing'
-                }
-              ].map((item) => (
-                <div key={item.en} className="rounded-xl border border-fd-border/70 bg-fd-background/80 p-5">
+              {dict.home.features.map((item) => (
+                <div key={item.title} className="rounded-xl border border-fd-border/70 bg-fd-background/80 p-5">
                   <h3 className="text-base font-semibold">
-                    {locale === 'zh' ? item.zh : item.en}
+                    {item.title}
                   </h3>
                   <p className="mt-2 text-sm text-fd-muted-foreground">
-                    {locale === 'zh'
-                      ? '面向研发与验证流程，提供稳定可靠的测试能力。'
-                      : 'Designed for R&D and validation with stable, reliable testing.'}
+                    {item.description}
                   </p>
                 </div>
               ))}
@@ -106,13 +98,13 @@ export default async function HomePage({ params }: PageProps) {
           <section className="md:-mx-4 lg:-mx-8">
             <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
               <h2 className="text-2xl font-semibold">
-                {locale === 'zh' ? '产品中心' : 'Product Center'}
+                {dict.home.products.title}
               </h2>
               <a
                 className="text-sm font-medium text-fd-primary hover:underline"
                 href={`/${locale}/products`}
               >
-                {locale === 'zh' ? '查看全部 →' : 'View all →'}
+                {dict.home.products.viewAll}
               </a>
             </div>
             <div className="grid gap-6 md:grid-cols-3">
@@ -125,27 +117,25 @@ export default async function HomePage({ params }: PageProps) {
                   <span className="text-lg font-extrabold text-fd-primary tracking-widest">EZ40004</span>
                 </div>
                 <div className="mb-2 text-base font-bold text-fd-foreground">
-                  {locale === 'zh' ? '源载双向交直流源' : 'Bidirectional AC/DC Source'}
+                  {dict.home.products.items.ez40004.title}
                 </div>
                 <p className="mb-4 text-sm text-fd-muted-foreground flex-1">
-                  {locale === 'zh'
-                    ? '面向电力电子测试的高精度源载一体平台。'
-                    : 'High-precision source/load platform for power electronics testing.'}
+                  {dict.home.products.items.ez40004.description}
                 </p>
                 <div className="mt-auto text-sm font-semibold text-fd-primary transition flex items-center gap-1">
-                  {locale === 'zh' ? '查看详情' : 'View details'}
+                  {dict.home.products.details}
                   <svg className="ml-1 h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
                 </div>
               </a>
               {/* 占位卡片2 */}
               <div className="flex flex-col h-full rounded-2xl border-2 border-dashed border-fd-border bg-fd-card/80 p-6 items-center justify-center text-fd-muted-foreground">
                 <span className="text-2xl font-bold mb-2">+</span>
-                <span className="text-sm">{locale === 'zh' ? '敬请期待' : 'Coming soon'}</span>
+                <span className="text-sm">{dict.home.products.comingSoon}</span>
               </div>
               {/* 占位卡片3 */}
               <div className="flex flex-col h-full rounded-2xl border-2 border-dashed border-fd-border bg-fd-card/80 p-6 items-center justify-center text-fd-muted-foreground">
                 <span className="text-2xl font-bold mb-2">+</span>
-                <span className="text-sm">{locale === 'zh' ? '敬请期待' : 'Coming soon'}</span>
+                <span className="text-sm">{dict.home.products.comingSoon}</span>
               </div>
             </div>
           </section>
@@ -158,22 +148,22 @@ export default async function HomePage({ params }: PageProps) {
 
           <section id="contact" className="rounded-2xl border border-fd-border bg-fd-card/90 p-8 shadow-md">
             <h2 className="text-2xl font-semibold">
-              {locale === 'zh' ? '联系咨询' : 'Contact'}
+              {dict.home.contact.title}
             </h2>
             <p className="mt-2 text-sm text-fd-muted-foreground">
-              {locale === 'zh'
-                ? '欢迎通过热线或邮箱联系我们。'
-                : 'Reach us via hotline or email.'}
+              {dict.home.contact.description}
             </p>
             <div className="mt-6 grid gap-4 md:grid-cols-2">
               <div className="rounded-xl border border-fd-border/70 bg-fd-background/80 p-4">
                 <div className="text-sm text-fd-muted-foreground">
-                  {locale === 'zh' ? '服务热线' : 'Hotline'}
+                  {dict.home.contact.hotline}
                 </div>
                 <div className="mt-1 text-base font-semibold">400-800-1234</div>
               </div>
               <div className="rounded-xl border border-fd-border/70 bg-fd-background/80 p-4">
-                <div className="text-sm text-fd-muted-foreground">Email</div>
+                <div className="text-sm text-fd-muted-foreground">
+                  {dict.home.contact.email}
+                </div>
                 <div className="mt-1 text-base font-semibold">hello@ezalive.com</div>
               </div>
             </div>

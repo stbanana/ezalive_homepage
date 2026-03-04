@@ -15,6 +15,20 @@
 - 静态导出，支持 GitHub Pages + CNAME 部署
 - 设计文档、AI TODO、SESSION_LOG 详见对应文件
 
+## 静态化路由与多语言重要备忘
+- 由于项目为纯静态导出（`output: 'export'`），Next.js 的 `i18n` 中间件不可用。
+- 我们使用显式 `[locale]` 文件夹架构，并配合 Fumadocs 手动进行语言映射。
+- **关于生成静态参数：**
+  - 在顶层级 `app/[locale]/layout.tsx` 中**必须**包含：
+    ```tsx
+    export const dynamicParams = false;
+    export function generateStaticParams() {
+      return i18n.languages.map((locale) => ({ locale }));
+    }
+    ```
+  - 当有多重动态参数时（例如 `app/[locale]/products/[slug]/page.tsx`），也需要完整声明 `[locale]` 和 `[slug]` 的所有组合以确保 SSG 正确打包。
+  - 普通层级的子页面（如 `/about` 或 `/contact`）不需要重复声明 `generateStaticParams` 和 `dynamicParams`，它们可以自动从根部 `layout.tsx` 继承静态参数列表。这避免了代码多余重复。
+
 ## 交接建议
 - 变更环境/AI时，先读取 AI/HANDOFF.md、AI/TODO.md、AI/SESSION_LOG.md 恢复上下文
 - 按照 AI/TODO.md 推进任务

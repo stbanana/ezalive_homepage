@@ -1,6 +1,9 @@
 import type { ComponentType } from 'react';
 import { notFound } from 'next/navigation';
 import { getMdxComponents } from '@/mdx-components';
+import CdsButton from '@/components/ui/cds-button';
+import { i18n } from '@/lib/i18n';
+import { products } from '@/data/products';
 
 type Locale = 'zh' | 'en';
 
@@ -20,13 +23,12 @@ const productMdxMap: Record<Locale, Record<string, () => Promise<{ default: Comp
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return [
-    { locale: 'zh', slug: 'ez40004' },
-    { locale: 'en', slug: 'ez40004' }
-  ];
+  return products.flatMap((p) =>
+    i18n.languages.map((locale) => ({ locale, slug: p.slug }))
+  );
 }
 
-export default async function ProductDetailPage({ params }: PageProps) {
+export default async function ProductPage({ params }: PageProps) {
   const { locale, slug } = await params;
   const loader = productMdxMap[locale]?.[slug];
   if (!loader) {
