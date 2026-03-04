@@ -5,10 +5,12 @@ export type Product = {
     zh: {
       name: string;
       summary: string;
+      coreSpecs: string[];
     };
     en: {
       name: string;
       summary: string;
+      coreSpecs: string[];
     };
   };
 };
@@ -21,13 +23,15 @@ export const products: Product[] = [
     model: "EZ40004",
     i18n: {
       zh: {
-        name: "EZ40004 源载双向交直流源",
+        name: "源载双向交直流源",
         summary: "面向电力电子测试的高性能源载双向交直流源平台。",
+        coreSpecs: ["300V", "30A", "4kVA", "单相"],
       },
       en: {
-        name: "EZ40004 Bidirectional AC/DC Source-Load Platform",
+        name: "Bidirectional AC/DC Source-Load Platform",
         summary:
           "High-performance bidirectional AC/DC source-load platform for power electronics testing.",
+        coreSpecs: ["300V", "30A", "4kVA", "Single-phase"],
       },
     },
   },
@@ -72,5 +76,6 @@ export function getLocalizedProduct(product: Product, locale: ProductLocale) {
     ...product,
     name: product.i18n[locale].name,
     summary: product.i18n[locale].summary,
+    coreSpecs: product.i18n[locale].coreSpecs,
   };
 }

@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react';
 import { getMdxComponents } from '@/mdx-components';
+import SubtleTechBackgroundLayout from '@/components/SubtleTechBackgroundLayout';
 
 type Locale = 'zh' | 'en';
 
@@ -17,10 +18,12 @@ export default async function AboutPage({ params }: PageProps) {
   const Content = (await aboutMdxMap[locale]()).default;
 
   return (
-    <main className="mx-auto w-full max-w-4xl px-6 py-12">
-      <div className="prose max-w-none">
-        <Content components={getMdxComponents()} />
-      </div>
-    </main>
+    <SubtleTechBackgroundLayout>
+      <main className="relative mx-auto w-full max-w-4xl px-6 py-12">
+        <div className="prose max-w-none">
+          <Content components={getMdxComponents()} />
+        </div>
+      </main>
+    </SubtleTechBackgroundLayout>
   );
 }

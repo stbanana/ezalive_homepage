@@ -1,22 +1,26 @@
 "use client";
 import { useState, useRef } from 'react';
 import Link from 'next/link';
+import { getLocalizedProduct, products, type ProductLocale } from '@/data/products';
 
 export default function ProductMenuNav({ locale }: { locale: string }) {
   const [open, setOpen] = useState(false);
   const timer = useRef<NodeJS.Timeout | null>(null);
+  const currentLocale: ProductLocale = locale === 'en' ? 'en' : 'zh';
+  const localizedProducts = products.map((product) => getLocalizedProduct(product, currentLocale));
+  const acdcProducts = localizedProducts.filter((product) => product.slug === 'ez40004');
 
   // 菜单分组与产品数据
   const groups = [
     {
       label: locale === 'zh' ? '交直流' : 'AC/DC',
-      products: [
-        {
-          name: 'EZ40004',
-          desc: locale === 'zh' ? '源载双向交直流源' : 'Bidirectional AC/DC Source',
-          url: `/${locale}/products/ez40004`
-        }
-      ]
+      products: acdcProducts.map((product) => ({
+        key: product.slug,
+        model: product.model,
+        name: product.name,
+        coreSpecsText: product.coreSpecs.join(' · '),
+        url: `/${locale}/products/${product.slug}`,
+      })),
     },
     {
       label: locale === 'zh' ? '交流' : 'AC',
@@ -60,12 +64,15 @@ export default function ProductMenuNav({ locale }: { locale: string }) {
                 <div className="flex flex-col gap-2">
                   {group.products.map(p => (
                     <Link
-                      key={p.name}
+                      key={p.key}
                       href={p.url}
                       className="block rounded-xl border border-fd-primary/40 bg-fd-card/90 px-4 py-3 shadow-sm hover:border-fd-primary transition-all"
                     >
-                      <div className="text-sm font-bold text-fd-primary mb-1">{p.name}</div>
-                      <div className="text-xs text-fd-muted-foreground">{p.desc}</div>
+                      <div className="text-sm font-bold text-fd-primary mb-1">{p.model}</div>
+                      <div className="text-xs text-fd-muted-foreground">{p.name}</div>
+                      <div className="mt-1 text-[11px] text-fd-muted-foreground">
+                        {locale === 'zh' ? '核心参数' : 'Core Specs'}: {p.coreSpecsText}
+                      </div>
                     </Link>
                   ))}
                 </div>
