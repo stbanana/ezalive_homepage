@@ -1,12 +1,15 @@
 "use client";
 import { useState, useRef } from 'react';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { getLocalizedProduct, products, type ProductLocale } from '@/data/products';
 
 export default function ProductMenuNav({ locale }: { locale: string }) {
   const [open, setOpen] = useState(false);
   const timer = useRef<NodeJS.Timeout | null>(null);
+  const pathname = usePathname();
   const currentLocale: ProductLocale = locale === 'en' ? 'en' : 'zh';
+  const isActive = pathname === `/${locale}/products` || pathname.startsWith(`/${locale}/products/`);
   const localizedProducts = products.map((product) => getLocalizedProduct(product, currentLocale));
   const acdcProducts = localizedProducts.filter((product) => product.slug === 'ez40004');
 
@@ -45,14 +48,15 @@ export default function ProductMenuNav({ locale }: { locale: string }) {
     <div className="relative" onMouseEnter={handleEnter} onMouseLeave={handleLeave}>
       <Link
         href={`/${locale}/products`}
-        className="inline-block px-3 py-2 cursor-pointer hover:text-fd-primary font-medium"
+        data-active={isActive}
+        className="inline-block px-2 py-2 cursor-pointer hover:text-fd-primary font-medium"
         tabIndex={0}
         onClick={() => setOpen(false)}
       >
         {locale === 'zh' ? '产品中心' : 'Products'}
       </Link>
       {open && (
-        <div className="absolute left-1/2 top-full z-50 mt-2 w-[340px] -translate-x-1/2 rounded-xl border border-fd-border bg-white shadow-2xl p-4 flex flex-col gap-3 animate-in fade-in">
+        <div className="absolute left-1/2 top-full z-50 mt-2 w-[340px] -translate-x-1/2 rounded-xl border border-fd-border bg-fd-background shadow-2xl p-4 flex flex-col gap-3 animate-in fade-in">
           {groups.map(group => (
             <div key={group.label}>
               <div className="text-xs font-bold text-fd-muted-foreground mb-2 select-none">
