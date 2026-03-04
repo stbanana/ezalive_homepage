@@ -4,6 +4,11 @@ import LanguageNotice from '@/components/LanguageNotice';
 import { getMdxComponents } from '@/mdx-components';
 import { getDictionary } from '@/lib/dictionaries';
 import { i18n } from '@/lib/i18n';
+import {
+  getHomepageProducts,
+  getLocalizedProduct,
+  HOME_PRODUCT_LIMIT,
+} from '@/data/products';
 
 type Locale = 'zh' | 'en';
 
@@ -26,6 +31,8 @@ export default async function HomePage({ params }: PageProps) {
   const { locale } = await params;
   const Content = (await homeMdxMap[locale]()).default;
   const dict = await getDictionary(locale);
+  const homepageProducts = getHomepageProducts(HOME_PRODUCT_LIMIT);
+  const placeholderCount = Math.max(0, HOME_PRODUCT_LIMIT - homepageProducts.length);
   const gridColor =
     'color-mix(in oklab, var(--color-fd-primary) 10%, transparent)';
 
@@ -108,35 +115,43 @@ export default async function HomePage({ params }: PageProps) {
               </a>
             </div>
             <div className="grid gap-6 md:grid-cols-3">
-              {/* 产品卡片1 */}
-              <a
-                className="group flex flex-col h-full rounded-2xl border-1 border-fd-primary/80 bg-fd-card/90 p-6 shadow-lg transition-all hover:scale-[1.03] hover:shadow-xl hover:border-fd-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fd-primary"
-                href={`/${locale}/products/ez40004`}
-              >
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="text-lg font-extrabold text-fd-primary tracking-widest">EZ40004</span>
+              {homepageProducts.map((product) => {
+                const localizedProduct = getLocalizedProduct(product, locale);
+
+                return (
+                  <a
+                    key={product.slug}
+                    className="group flex h-full flex-col rounded-2xl border-1 border-fd-primary/80 bg-fd-card/90 p-6 shadow-lg transition-all hover:scale-[1.03] hover:border-fd-primary/90 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fd-primary"
+                    href={`/${locale}/products/${product.slug}`}
+                  >
+                    <div className="mb-2 flex items-center gap-3">
+                      <span className="text-lg font-extrabold tracking-widest text-fd-primary">
+                        {product.model}
+                      </span>
+                    </div>
+                    <div className="mb-2 text-base font-bold text-fd-foreground">
+                      {localizedProduct.name}
+                    </div>
+                    <p className="mb-4 flex-1 text-sm text-fd-muted-foreground">
+                      {localizedProduct.summary}
+                    </p>
+                    <div className="mt-auto flex items-center gap-1 text-sm font-semibold text-fd-primary transition">
+                      {dict.home.products.details}
+                      <svg className="ml-1 h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                    </div>
+                  </a>
+                );
+              })}
+
+              {Array.from({ length: placeholderCount }).map((_, index) => (
+                <div
+                  key={`coming-soon-${index}`}
+                  className="flex h-full flex-col items-center justify-center rounded-2xl border-2 border-dashed border-fd-border bg-fd-card/80 p-6 text-fd-muted-foreground"
+                >
+                  <span className="mb-2 text-2xl font-bold">+</span>
+                  <span className="text-sm">{dict.home.products.comingSoon}</span>
                 </div>
-                <div className="mb-2 text-base font-bold text-fd-foreground">
-                  {dict.home.products.items.ez40004.title}
-                </div>
-                <p className="mb-4 text-sm text-fd-muted-foreground flex-1">
-                  {dict.home.products.items.ez40004.description}
-                </p>
-                <div className="mt-auto text-sm font-semibold text-fd-primary transition flex items-center gap-1">
-                  {dict.home.products.details}
-                  <svg className="ml-1 h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                </div>
-              </a>
-              {/* 占位卡片2 */}
-              <div className="flex flex-col h-full rounded-2xl border-2 border-dashed border-fd-border bg-fd-card/80 p-6 items-center justify-center text-fd-muted-foreground">
-                <span className="text-2xl font-bold mb-2">+</span>
-                <span className="text-sm">{dict.home.products.comingSoon}</span>
-              </div>
-              {/* 占位卡片3 */}
-              <div className="flex flex-col h-full rounded-2xl border-2 border-dashed border-fd-border bg-fd-card/80 p-6 items-center justify-center text-fd-muted-foreground">
-                <span className="text-2xl font-bold mb-2">+</span>
-                <span className="text-sm">{dict.home.products.comingSoon}</span>
-              </div>
+              ))}
             </div>
           </section>
 

@@ -31,13 +31,6 @@ export const en: Dictionary = {
       viewAll: "View all →",
       details: "View details",
       comingSoon: "Coming soon",
-      items: {
-        ez40004: {
-          title: "Bidirectional AC/DC Source",
-          description:
-            "High-precision source/load platform for power electronics testing.",
-        },
-      },
     },
     contact: {
       title: "Contact",

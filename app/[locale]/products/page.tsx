@@ -1,4 +1,4 @@
-import { products } from '@/data/products';
+import { getLocalizedProduct, products } from '@/data/products';
 
 type Locale = 'zh' | 'en';
 
@@ -8,6 +8,8 @@ type PageProps = {
 
 export default async function ProductsPage({ params }: PageProps) {
   const { locale } = await params;
+  const localizedProducts = products.map((product) => getLocalizedProduct(product, locale));
+
   return (
     <main className="mx-auto w-full max-w-6xl px-6 py-12">
       <header className="space-y-3">
@@ -22,11 +24,11 @@ export default async function ProductsPage({ params }: PageProps) {
       </header>
 
       <div className="mt-8 grid gap-6 md:grid-cols-2">
-        {products.map((product) => (
+        {localizedProducts.map((product) => (
           <article key={product.slug} className="rounded-xl border border-neutral-200 p-6">
             <h2 className="text-xl font-semibold">{product.name}</h2>
             <p className="mt-2 text-sm text-neutral-600">{product.summary}</p>
-            <div className="mt-4 text-xs text-neutral-500">Model: {product.model}</div>
+            <div className="mt-4 text-xs text-neutral-500">{locale === 'zh' ? '型号' : 'Model'}: {product.model}</div>
             <a
               className="mt-4 inline-flex items-center text-sm font-medium text-neutral-900"
               href={`/${locale}/products/${product.slug}`}

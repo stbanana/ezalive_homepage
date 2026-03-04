@@ -26,12 +26,6 @@ export const zh = {
       viewAll: "查看全部 →",
       details: "查看详情",
       comingSoon: "敬请期待",
-      items: {
-        ez40004: {
-          title: "源载双向交直流源",
-          description: "面向电力电子测试的高精度源载一体平台。",
-        },
-      },
     },
     contact: {
       title: "联系咨询",
