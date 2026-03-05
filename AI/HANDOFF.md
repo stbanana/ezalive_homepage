@@ -8,12 +8,14 @@
 - 主要页面：
   - 首页（/zh, /en）
   - 产品中心（/zh/products, /en/products）
-  - 产品详情（/zh/products/ez40004, /en/products/ez40004）
+  - 产品详情（/zh/products/EZ4000x, /en/products/EZ4000x）
   - 关于我们（/zh/about, /en/about）
   - 联系（/zh/contact, /en/contact）
 - 顶部导航：自定义“产品中心”TAB，支持悬停弹出分组与卡片，点击可跳转产品中心页
 - 静态导出，支持 GitHub Pages + CNAME 部署
 - 设计文档、AI TODO、SESSION_LOG 详见对应文件
+- 搜索：Orama + 中文分词（@orama/tokenizers），内容/产品分区展示
+- i18n：页面文案字典化收尾完成（locales + 产品数据 + MDX）
 
 ## 静态化路由与多语言重要备忘
 - 由于项目为纯静态导出（`output: 'export'`），Next.js 的 `i18n` 中间件不可用。
@@ -33,6 +35,9 @@
 - 变更环境/AI时，先读取 AI/HANDOFF.md、AI/TODO.md、AI/SESSION_LOG.md 恢复上下文
 - 按照 AI/TODO.md 推进任务
 - 设计文档.md 保持与实际实现同步
+
+## 关键难点记录（需外部资料）
+- 中文搜索：当时需参考 Orama 官方中文分词文档，确认 `@orama/tokenizers` 的中文支持与最佳实践配置；无该文档时无法独立确认可行方案。
 
 
 ## 组件命名与变量命名约定
