@@ -1,12 +1,14 @@
 "use client";
-import { useState, useRef } from 'react';
-import { usePathname } from 'next/navigation';
+import { useState, useRef, useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { getLocalizedProduct, products, type ProductLocale } from '@/data/products';
 
 export default function ProductMenuNav({ locale }: { locale: string }) {
   const [open, setOpen] = useState(false);
+  const [enableHoverMenu, setEnableHoverMenu] = useState(true);
   const timer = useRef<NodeJS.Timeout | null>(null);
+  const router = useRouter();
   const pathname = usePathname();
   const currentLocale: ProductLocale = locale === 'en' ? 'en' : 'zh';
   const isActive = pathname === `/${locale}/products` || pathname.startsWith(`/${locale}/products/`);
@@ -37,15 +39,43 @@ export default function ProductMenuNav({ locale }: { locale: string }) {
 
   // 悬停控制
   const handleEnter = () => {
+    if (!enableHoverMenu) return;
     if (timer.current) clearTimeout(timer.current);
     setOpen(true);
   };
   const handleLeave = () => {
+    if (!enableHoverMenu) return;
     timer.current = setTimeout(() => setOpen(false), 120);
   };
 
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const update = () => {
+      setEnableHoverMenu(mediaQuery.matches);
+      if (!mediaQuery.matches) {
+        setOpen(false);
+      }
+    };
+    update();
+    if (typeof mediaQuery.addEventListener === 'function') {
+      mediaQuery.addEventListener('change', update);
+      return () => mediaQuery.removeEventListener('change', update);
+    }
+    mediaQuery.addListener(update);
+    return () => mediaQuery.removeListener(update);
+  }, []);
+
   return (
-    <div className="relative" onMouseEnter={handleEnter} onMouseLeave={handleLeave}>
+    <div
+      className="relative"
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+      onClick={() => {
+        if (!enableHoverMenu) {
+          router.push(`/${locale}/products`);
+        }
+      }}
+    >
       <Link
         href={`/${locale}/products`}
         data-active={isActive}
@@ -55,7 +85,7 @@ export default function ProductMenuNav({ locale }: { locale: string }) {
       >
         {locale === 'zh' ? '产品中心' : 'Products'}
       </Link>
-      {open && (
+      {open && enableHoverMenu && (
         <div className="absolute left-1/2 top-full z-50 mt-2 w-[340px] -translate-x-1/2 rounded-xl border border-fd-border bg-fd-background shadow-2xl p-4 flex flex-col gap-3 animate-in fade-in">
           {groups.map(group => (
             <div key={group.label}>

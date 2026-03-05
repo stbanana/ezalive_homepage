@@ -197,23 +197,21 @@ export default function CustomSearchDialog({
         [currentLocale],
     );
 
-    const matchedProduct = useMemo(() => {
+    const matchedProducts = useMemo(() => {
         const trimmedSearch = search.trim();
-        if (!trimmedSearch) return null;
+        if (!trimmedSearch) return [] as typeof localizedProducts;
 
-        return (
-            localizedProducts.find((product) => {
-                const keywords = [
-                    product.model,
-                    product.name,
-                    product.summary,
-                    product.slug,
-                    ...(product.coreSpecs ?? []),
-                ];
+        return localizedProducts.filter((product) => {
+            const keywords = [
+                product.model,
+                product.name,
+                product.summary,
+                product.slug,
+                ...(product.coreSpecs ?? []),
+            ];
 
-                return keywords.some((keyword) => matchesKeyword(trimmedSearch, keyword));
-            }) || null
-        );
+            return keywords.some((keyword) => matchesKeyword(trimmedSearch, keyword));
+        });
     }, [localizedProducts, search]);
 
     const listItems = useMemo(() => {
@@ -269,7 +267,7 @@ export default function CustomSearchDialog({
             perUrlCount.set(url, currentCount + 1);
             return true;
         });
-    }, [listItems, matchedProduct, locale]);
+    }, [listItems, locale]);
 
     const groupedItems = useMemo(() => {
         if (!Array.isArray(filteredItems)) return filteredItems;
@@ -341,25 +339,30 @@ export default function CustomSearchDialog({
                     <SearchDialogInput />
                     <SearchDialogClose />
                 </SearchDialogHeader>
-                {matchedProduct && (
+                {matchedProducts.length > 0 && (
                     <div className="px-4 pb-3">
                         <div className="mb-2 text-xs font-semibold text-fd-muted-foreground">
                             {locale === 'zh' ? '产品匹配' : 'Product match'}
                         </div>
-                        <a
-                            className="block rounded-xl border border-fd-primary/40 bg-fd-card/90 px-4 py-3 shadow-sm transition-all hover:border-fd-primary"
-                            href={`/${locale}/products/${matchedProduct.slug}`}
-                        >
-                            <div className="text-sm font-bold text-fd-primary mb-1">
-                                {matchedProduct.model}
-                            </div>
-                            <div className="text-xs text-fd-muted-foreground">
-                                {matchedProduct.name}
-                            </div>
-                            <div className="mt-1 text-[11px] text-fd-muted-foreground">
-                                {locale === 'zh' ? '核心参数' : 'Core Specs'}: {matchedProduct.coreSpecs.join(' · ')}
-                            </div>
-                        </a>
+                        <div className="grid gap-3 sm:grid-cols-2">
+                            {matchedProducts.map((product) => (
+                                <a
+                                    key={`${product.slug}-${product.model}`}
+                                    className="block rounded-xl border border-fd-primary/40 bg-fd-card/90 px-4 py-3 shadow-sm transition-all hover:border-fd-primary"
+                                    href={`/${locale}/products/${product.slug}`}
+                                >
+                                    <div className="text-sm font-bold text-fd-primary mb-1">
+                                        {product.model}
+                                    </div>
+                                    <div className="text-xs text-fd-muted-foreground">
+                                        {product.name}
+                                    </div>
+                                    <div className="mt-1 text-[11px] text-fd-muted-foreground">
+                                        {locale === 'zh' ? '核心参数' : 'Core Specs'}: {product.coreSpecs.join(' · ')}
+                                    </div>
+                                </a>
+                            ))}
+                        </div>
                     </div>
                 )}
                 {hasContentMatches && (

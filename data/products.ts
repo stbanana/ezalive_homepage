@@ -90,7 +90,12 @@ export const products: Product[] = [
 
 export const HOME_PRODUCT_LIMIT = 3;
 
-export const HOME_PRODUCT_MODEL_PRIORITY: string[] = ["EZ40004"];
+export const HOME_PRODUCT_MODEL_PRIORITY: string[] = [
+  "EZ400024",
+  "EZ400012",
+  "EZ40008",
+  "EZ40004",
+];
 
 export function getHomepageProducts(
   limit: number = HOME_PRODUCT_LIMIT,
