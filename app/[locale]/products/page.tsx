@@ -18,12 +18,10 @@ export default async function ProductsPage({ params }: PageProps) {
       <main className="relative mx-auto w-full max-w-6xl px-6 py-12">
         <header className="space-y-3">
           <h1 className="text-3xl font-semibold">
-            {locale === 'zh' ? '产品中心' : 'Products'}
+            {dict.products.title}
           </h1>
           <p className="text-sm text-neutral-600">
-            {locale === 'zh'
-              ? '聚焦电力电子测试场景的源载双向交直流源。'
-              : 'Bidirectional AC/DC source-load solutions for power electronics testing.'}
+            {dict.products.description}
           </p>
         </header>
 
@@ -34,11 +32,11 @@ export default async function ProductsPage({ params }: PageProps) {
               className="group flex h-full flex-col rounded-2xl border border-fd-primary/40 bg-fd-card/90 p-6 shadow-lg transition-all hover:scale-[1.03] hover:border-fd-primary hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fd-primary"
               href={`/${locale}/products/${product.slug}`}
             >
-              <div className="text-xs text-fd-primary">{locale === 'zh' ? '型号' : 'Model'}: {product.model}</div>
+              <div className="text-xs text-fd-primary">{dict.common.labels.model}: {product.model}</div>
               <h2 className="mt-2 text-xl font-semibold text-fd-foreground">{product.name}</h2>
               <p className="mt-2 text-sm text-fd-muted-foreground">{product.summary}</p>
               <div className="mt-2 text-xs text-fd-muted-foreground">
-                {locale === 'zh' ? '核心参数' : 'Core Specs'}: {product.coreSpecs.join(' · ')}
+                {dict.common.labels.coreSpecs}: {product.coreSpecs.join(' · ')}
               </div>
               <div className="mt-4 inline-flex items-center text-sm font-medium text-fd-foreground transition-colors group-hover:text-fd-primary">
                 {dict.home.products.details} →

@@ -80,7 +80,7 @@ export default async function HomePage({ params }: PageProps) {
               <div className="flex items-center justify-center">
                 <img
                   src="/品牌logo.png"
-                  alt="brand logo"
+                  alt={dict.common.brandLogoAlt}
                   className="h-40 w-40 rounded-lg border border-dashed border-fd-border bg-fd-card/60 p-6"
                 />
               </div>
@@ -136,7 +136,7 @@ export default async function HomePage({ params }: PageProps) {
                       {localizedProduct.summary}
                     </p>
                     <div className="mb-4 text-xs text-fd-muted-foreground">
-                      {locale === 'zh' ? '核心参数' : 'Core Specs'}: {localizedProduct.coreSpecs.join(' · ')}
+                      {dict.common.labels.coreSpecs}: {localizedProduct.coreSpecs.join(' · ')}
                     </div>
                     <div className="mt-auto flex items-center gap-1 text-sm font-semibold text-fd-foreground group-hover:text-fd-primary transition">
                       {dict.home.products.details}

@@ -68,6 +68,11 @@ export const zh = {
   },
   common: {
     backToHome: "返回首页",
+    brandLogoAlt: "品牌 logo",
+    labels: {
+      model: "型号",
+      coreSpecs: "核心参数",
+    },
   },
 };
 

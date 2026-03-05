@@ -74,5 +74,10 @@ export const en: Dictionary = {
   },
   common: {
     backToHome: "Back to Home",
+    brandLogoAlt: "Brand logo",
+    labels: {
+      model: "Model",
+      coreSpecs: "Core Specs",
+    },
   },
 };
