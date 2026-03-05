@@ -121,7 +121,7 @@ export default async function HomePage({ params }: PageProps) {
                 return (
                   <a
                     key={`${product.slug}-${product.model}`}
-                    className="group flex h-full flex-col rounded-2xl border-1 border-fd-primary/80 bg-fd-card/90 p-6 shadow-lg transition-all hover:scale-[1.03] hover:border-fd-primary/90 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fd-primary"
+                    className="group flex h-full flex-col rounded-2xl border border-fd-primary/80 bg-fd-card/90 p-6 shadow-lg transition-all hover:scale-[1.03] hover:border-fd-primary/90 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fd-primary"
                     href={`/${locale}/products/${product.slug}`}
                   >
                     <div className="mb-2 flex items-center gap-3">

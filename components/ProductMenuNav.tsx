@@ -118,7 +118,7 @@ export default function ProductMenuNav({ locale }: { locale: string }) {
       </Link>
       {open && enableHoverMenu && (
         <div
-          className="absolute left-0 top-full z-50 mt-2 w-[720px] rounded-xl border border-fd-border bg-fd-background shadow-2xl p-4 animate-in fade-in"
+          className="absolute left-0 top-full z-50 mt-2 w-180 rounded-xl border border-fd-border bg-fd-background shadow-2xl p-4 animate-in fade-in"
           style={{ transform: `translateX(${panelOffset}px)` }}
         >
           <div className="grid grid-cols-[140px_1fr] gap-4">
