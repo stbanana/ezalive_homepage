@@ -1,4 +1,4 @@
-import type { CSSProperties, ComponentType } from 'react';
+import type { ComponentType } from 'react';
 import { notFound } from 'next/navigation';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -8,6 +8,7 @@ import matter from 'gray-matter';
 import { getMdxComponents } from '@/mdx-components';
 import { i18n } from '@/lib/i18n';
 import { products } from '@/data/products';
+
 
 type Locale = 'zh' | 'en';
 
@@ -54,13 +55,6 @@ export default async function ProductPage({ params }: PageProps) {
   const { content: markdownContent } = matter(mdxSource);
   const toc = getTableOfContents(markdownContent);
   const Content = (await pageConfig.loader()).default;
-  const docsPageStyle = {
-    '--fd-toc-width': '19rem',
-    '--fd-sidebar-width': '0px',
-    '--fd-page-width': '72rem',
-    '--fd-layout-offset': '1rem',
-  } as CSSProperties;
-
   return (
     <DocsPage
       toc={toc}
@@ -70,7 +64,7 @@ export default async function ProductPage({ params }: PageProps) {
       breadcrumb={{ enabled: false }}
       footer={{ enabled: false }}
       container={{
-        style: docsPageStyle,
+        className: '[--fd-toc-width:0px] xl:[--fd-toc-width:19rem] 2xl:[--fd-toc-width:21rem]',
       }}
       article={{
         className: 'px-6 py-12 md:px-8',
