@@ -35,13 +35,21 @@ type SearchItemWithSnippet = SearchItemType & {
     __snippetHighlights?: HighlightedText<string>[];
 };
 
+type SearchTextItemWithSnippet = SearchItemWithSnippet & {
+    type: 'page' | 'text' | 'heading';
+};
+
+type GroupedEntry = SearchTextItemWithSnippet & {
+    __entryUrl?: string;
+};
+
 type GroupedSearchItem = {
     type: 'group';
     id: string;
     url: string;
     title: string;
     description?: string;
-    entries: SearchItemWithSnippet[];
+    entries: GroupedEntry[];
 };
 
 function escapeRegExp(input: string): string {
@@ -267,7 +275,7 @@ export default function CustomSearchDialog({
         if (!Array.isArray(filteredItems)) return filteredItems;
 
         const actions: SearchItemType[] = [];
-        const groups = new Map<string, SearchItemWithSnippet[]>();
+        const groups = new Map<string, GroupedEntry[]>();
         const order: string[] = [];
 
         for (const item of filteredItems) {
@@ -289,8 +297,8 @@ export default function CustomSearchDialog({
             }
 
             groups.get(baseUrl)?.push({
-                ...(item as SearchItemWithSnippet),
-                url: rawUrl,
+                ...(item as SearchTextItemWithSnippet),
+                __entryUrl: rawUrl,
             });
         }
 
@@ -384,7 +392,7 @@ export default function CustomSearchDialog({
                                         {typedItem.entries.length > 0 && (
                                             <div className="mt-2 space-y-1 pl-4">
                                                 {typedItem.entries.map((entry, index) => {
-                                                    const entryUrl = 'url' in entry ? entry.url : typedItem.url;
+                                                    const entryUrl = entry.__entryUrl ?? typedItem.url;
                                                     const entryHasSnippet = Boolean(entry.__snippetHighlights?.length);
 
                                                     return (

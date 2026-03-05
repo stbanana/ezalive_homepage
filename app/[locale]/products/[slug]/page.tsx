@@ -23,15 +23,15 @@ type PageProps = {
 
 const productMdxMap: Record<Locale, Record<string, ProductPageConfig>> = {
   zh: {
-    ez40004: {
-      loader: () => import('@/content/zh/products/ez40004.mdx'),
-      filePath: 'content/zh/products/ez40004.mdx',
+    ez4000x: {
+      loader: () => import('@/content/zh/products/ez4000x.mdx'),
+      filePath: 'content/zh/products/ez4000x.mdx',
     }
   },
   en: {
-    ez40004: {
-      loader: () => import('@/content/en/products/ez40004.mdx'),
-      filePath: 'content/en/products/ez40004.mdx',
+    ez4000x: {
+      loader: () => import('@/content/en/products/ez4000x.mdx'),
+      filePath: 'content/en/products/ez4000x.mdx',
     }
   }
 };
@@ -39,8 +39,9 @@ const productMdxMap: Record<Locale, Record<string, ProductPageConfig>> = {
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return products.flatMap((p) =>
-    i18n.languages.map((locale) => ({ locale, slug: p.slug }))
+  const uniqueSlugs = Array.from(new Set(products.map((product) => product.slug)));
+  return uniqueSlugs.flatMap((slug) =>
+    i18n.languages.map((locale) => ({ locale, slug }))
   );
 }
 

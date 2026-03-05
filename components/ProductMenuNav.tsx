@@ -11,14 +11,14 @@ export default function ProductMenuNav({ locale }: { locale: string }) {
   const currentLocale: ProductLocale = locale === 'en' ? 'en' : 'zh';
   const isActive = pathname === `/${locale}/products` || pathname.startsWith(`/${locale}/products/`);
   const localizedProducts = products.map((product) => getLocalizedProduct(product, currentLocale));
-  const acdcProducts = localizedProducts.filter((product) => product.slug === 'ez40004');
+  const acdcProducts = localizedProducts.filter((product) => product.slug === 'ez4000x');
 
   // 菜单分组与产品数据
   const groups = [
     {
       label: locale === 'zh' ? '交直流' : 'AC/DC',
       products: acdcProducts.map((product) => ({
-        key: product.slug,
+        key: `${product.slug}-${product.model}`,
         model: product.model,
         name: product.name,
         coreSpecsText: product.coreSpecs.join(' · '),

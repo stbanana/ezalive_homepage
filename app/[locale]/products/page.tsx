@@ -30,7 +30,7 @@ export default async function ProductsPage({ params }: PageProps) {
         <div className="mt-8 grid gap-6 md:grid-cols-2">
           {localizedProducts.map((product) => (
             <a
-              key={product.slug}
+              key={`${product.slug}-${product.model}`}
               className="group flex h-full flex-col rounded-2xl border border-fd-primary/40 bg-fd-card/90 p-6 shadow-lg transition-all hover:scale-[1.03] hover:border-fd-primary hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fd-primary"
               href={`/${locale}/products/${product.slug}`}
             >
