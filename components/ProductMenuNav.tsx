@@ -16,7 +16,7 @@ export default function ProductMenuNav({ locale }: { locale: string }) {
   const currentLocale: ProductLocale = locale === 'en' ? 'en' : 'zh';
   const isActive = pathname === `/${locale}/products` || pathname.startsWith(`/${locale}/products/`);
   const localizedProducts = products.map((product) => getLocalizedProduct(product, currentLocale));
-  const acdcProducts = localizedProducts.filter((product) => product.slug === 'ez4000x');
+  const acdcProducts = localizedProducts.filter((product) => product.slug === 'EZ4000x');
 
   // 菜单分组与产品数据
   const groups = [

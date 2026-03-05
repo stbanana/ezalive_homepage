@@ -19,7 +19,7 @@ export type ProductLocale = "zh" | "en";
 
 export const products: Product[] = [
   {
-    slug: "ez4000x",
+    slug: "EZ4000x",
     model: "EZ40004",
     i18n: {
       zh: {
@@ -36,7 +36,7 @@ export const products: Product[] = [
     },
   },
   {
-    slug: "ez4000x",
+    slug: "EZ4000x",
     model: "EZ40008",
     i18n: {
       zh: {
@@ -53,7 +53,7 @@ export const products: Product[] = [
     },
   },
   {
-    slug: "ez4000x",
+    slug: "EZ4000x",
     model: "EZ400012",
     i18n: {
       zh: {
@@ -70,7 +70,7 @@ export const products: Product[] = [
     },
   },
   {
-    slug: "ez4000x",
+    slug: "EZ4000x",
     model: "EZ400024",
     i18n: {
       zh: {

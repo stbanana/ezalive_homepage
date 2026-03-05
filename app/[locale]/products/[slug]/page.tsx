@@ -23,15 +23,15 @@ type PageProps = {
 
 const productMdxMap: Record<Locale, Record<string, ProductPageConfig>> = {
   zh: {
-    ez4000x: {
-      loader: () => import('@/content/zh/products/ez4000x.mdx'),
-      filePath: 'content/zh/products/ez4000x.mdx',
+    EZ4000x: {
+      loader: () => import('@/content/zh/products/EZ4000x.mdx'),
+      filePath: 'content/zh/products/EZ4000x.mdx',
     }
   },
   en: {
-    ez4000x: {
-      loader: () => import('@/content/en/products/ez4000x.mdx'),
-      filePath: 'content/en/products/ez4000x.mdx',
+    EZ4000x: {
+      loader: () => import('@/content/en/products/EZ4000x.mdx'),
+      filePath: 'content/en/products/EZ4000x.mdx',
     }
   }
 };
