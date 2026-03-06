@@ -41,7 +41,7 @@ export default async function HomePage({ params }: PageProps) {
       <div
         className="pointer-events-none absolute inset-0 -z-10 opacity-60"
         style={{
-          backgroundImage: `radial-gradient(circle at top, color-mix(in oklab, var(--color-fd-primary) 12%, transparent) 0%, transparent 55%), repeating-linear-gradient(to right, ${gridColor}, ${gridColor} 1px, transparent 1px, transparent 64px), repeating-linear-gradient(to bottom, ${gridColor}, ${gridColor} 1px, transparent 1px, transparent 64px), repeating-linear-gradient(to bottom, transparent, color-mix(in oklab, var(--color-fd-primary) 6%, transparent) 360px, transparent 900px)`
+          backgroundImage: `radial-gradient(circle at top, color-mix(in oklab, var(--color-fd-primary) 12%, transparent) 0%, transparent 55%)`
         }}
       />
 
