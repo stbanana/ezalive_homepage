@@ -7,7 +7,7 @@
     "dev": "next dev --turbo",
     "start": "next start",
     "postinstall": "fumadocs-mdx",
-    "deploy": "next build && npx gh-pages -d out --dotfiles --cname ezalive.yono233.cn"
+    "deploy": "next build && npx gh-pages -d out --dotfiles --cname www.ezalive.com"
   },
   "dependencies": {
     "@carbon/styles": "^1.101.0",
