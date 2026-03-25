@@ -3,7 +3,7 @@ import { Dictionary } from "./zh";
 export const en: Dictionary = {
   home: {
     hero: {
-      title: "Ezalive",
+      title: "易启测 ezalive",
       description:
         "Ezalive focuses on high-precision power electronics test platforms for reliable R&D and validation.",
       exploreBtn: "Explore Products",
