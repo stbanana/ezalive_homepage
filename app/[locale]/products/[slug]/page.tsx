@@ -4,11 +4,13 @@ import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { getTableOfContents } from 'fumadocs-core/content/toc';
 import { DocsBody, DocsPage } from 'fumadocs-ui/page';
+import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 import matter from 'gray-matter';
 import { getMdxComponents } from '@/mdx-components';
 import { i18n } from '@/lib/i18n';
 import { products } from '@/data/products';
 
+import { source } from '@/lib/source';
 
 type Locale = 'zh' | 'en';
 
