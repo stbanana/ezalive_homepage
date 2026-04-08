@@ -108,7 +108,7 @@ export const CdsButton: React.FC<ButtonProps> = (props) => {
         cursor: 'pointer',
         border: '1px solid',
         transition: 'background 0.15s, color 0.15s, border 0.15s',
-        outline: 'none',
+        // outline: 'none',
         ...variantStyleMap[variant],
         ...style,
     };

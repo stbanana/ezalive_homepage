@@ -81,7 +81,7 @@ export default async function HomePage({ params }: PageProps) {
                 <img
                   src="/品牌logo.png"
                   alt={dict.common.brandLogoAlt}
-                  className="h-40 w-40 rounded-lg border border-dashed border-fd-border bg-fd-card/60 p-6"
+                  className=" w-80 rounded-lg border border-dashed border-fd-border bg-fd-card/60 p-6"
                 />
               </div>
             </div>
