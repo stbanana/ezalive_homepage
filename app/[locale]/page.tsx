@@ -1,6 +1,7 @@
 ﻿import type { ComponentType } from 'react';
 import CdsButton from '@/components/ui/cds-button';
 import LanguageNotice from '@/components/LanguageNotice';
+import HeroSection from '@/components/home/HeroSection';
 import { getMdxComponents } from '@/mdx-components';
 import { getDictionary } from '@/lib/dictionaries';
 import { i18n } from '@/lib/i18n';
@@ -49,43 +50,14 @@ export default async function HomePage({ params }: PageProps) {
         <LanguageNotice locale={locale} />
 
         <div className="space-y-10">
-          <section className="rounded-2xl border border-fd-border bg-fd-card/95 p-8 shadow-md">
-            <div className="grid gap-10 md:grid-cols-[1.1fr_0.9fr] md:items-center">
-              <div className="space-y-6">
-                <h1>
-                  {dict.home.hero.title}
-                </h1>
-                <p className="text-lg leading-8 text-fd-muted-foreground">
-                  {dict.home.hero.description}
-                </p>
-                <div className="flex flex-wrap gap-3">
-                  <CdsButton
-                    as="a"
-                    href={`/${locale}/products`}
-                    variant="primary"
-                    radius="0.5rem"
-                  >
-                    {dict.home.hero.exploreBtn}
-                  </CdsButton>
-                  <CdsButton
-                    as="a"
-                    href={`/${locale}#contact`}
-                    variant="tertiary"
-                    radius="0.5rem"
-                  >
-                    {dict.home.hero.contactBtn}
-                  </CdsButton>
-                </div>
-              </div>
-              <div className="flex items-center justify-center">
-                <img
-                  src="/品牌logo.png"
-                  alt={dict.common.brandLogoAlt}
-                  className=" w-80 rounded-lg border border-dashed border-fd-border bg-fd-card/60 p-6"
-                />
-              </div>
-            </div>
-          </section>
+          <HeroSection
+            locale={locale}
+            title={dict.home.hero.title}
+            description={dict.home.hero.description}
+            exploreBtn={dict.home.hero.exploreBtn}
+            contactBtn={dict.home.hero.contactBtn}
+            brandLogoAlt={dict.common.brandLogoAlt}
+          />
 
           <section className="rounded-2xl border border-fd-border bg-fd-card/90 p-8 shadow-md">
             <div className="grid gap-6 md:grid-cols-3">
