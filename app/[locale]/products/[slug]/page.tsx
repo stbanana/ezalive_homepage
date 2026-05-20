@@ -62,13 +62,13 @@ export default async function ProductPage({ params }: PageProps) {
   const productMdxComponents = {
     ...getMdxComponents(),
     h1: ({ className, ...props }: HTMLAttributes<HTMLHeadingElement>) => (
-      <h1 className={withClass('scroll-m-20 text-4xl font-semibold tracking-tight', className)} {...props} />
+      <h1 className={withClass('scroll-m-20', className)} {...props} />
     ),
     h2: ({ className, ...props }: HTMLAttributes<HTMLHeadingElement>) => (
-      <h2 className={withClass('scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight', className)} {...props} />
+      <h2 className={withClass('scroll-m-20 border-b pb-2', className)} {...props} />
     ),
     h3: ({ className, ...props }: HTMLAttributes<HTMLHeadingElement>) => (
-      <h3 className={withClass('scroll-m-20 text-xl font-semibold tracking-tight', className)} {...props} />
+      <h3 className={withClass('scroll-m-20', className)} {...props} />
     ),
   };
 

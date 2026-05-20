@@ -52,10 +52,10 @@ export default async function HomePage({ params }: PageProps) {
           <section className="rounded-2xl border border-fd-border bg-fd-card/95 p-8 shadow-md">
             <div className="grid gap-10 md:grid-cols-[1.1fr_0.9fr] md:items-center">
               <div className="space-y-6">
-                <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">
+                <h1>
                   {dict.home.hero.title}
                 </h1>
-                <p className="text-lg text-fd-muted-foreground">
+                <p className="text-lg leading-8 text-fd-muted-foreground">
                   {dict.home.hero.description}
                 </p>
                 <div className="flex flex-wrap gap-3">
@@ -104,7 +104,7 @@ export default async function HomePage({ params }: PageProps) {
 
           <section className="md:-mx-4 lg:-mx-8">
             <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-              <h2 className="text-2xl font-semibold">
+              <h2>
                 {dict.home.products.title}
               </h2>
               <a
@@ -165,7 +165,7 @@ export default async function HomePage({ params }: PageProps) {
           </section>
 
           <section id="contact" className="rounded-2xl border border-fd-border bg-fd-card/90 p-8 shadow-md">
-            <h2 className="text-2xl font-semibold">
+            <h2>
               {dict.home.contact.title}
             </h2>
             <p className="mt-2 text-sm text-fd-muted-foreground">

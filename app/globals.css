@@ -8,8 +8,52 @@
 
 :root {
   color-scheme: light;
+  --brand-font-sans:
+    "IBM Plex Sans", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+    "Noto Sans SC", "Source Han Sans SC", "Helvetica Neue", Arial,
+    "Liberation Sans", sans-serif;
   --cds-font-sans:
-    "IBM Plex Sans", "Helvetica Neue", Arial, "Liberation Sans", sans-serif;
+    var(--brand-font-sans);
+}
+
+html,
+body {
+  font-family: var(--brand-font-sans);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  line-height: 1.6;
+  letter-spacing: 0;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--brand-font-sans);
+  color: var(--color-fd-foreground);
+}
+
+h1 {
+  font-size: clamp(2rem, 1.2rem + 2.4vw, 3.25rem);
+  line-height: 1.12;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+h2 {
+  font-size: clamp(1.5rem, 1.1rem + 1.2vw, 2.25rem);
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  font-size: clamp(1.125rem, 1rem + 0.4vw, 1.375rem);
+  line-height: 1.3;
+  font-weight: 600;
 }
 
 @theme {
@@ -71,8 +115,9 @@
 }
 
 #nd-nav nav [data-active="true"] {
-  background: var(--cds-tag-background-magenta);
-  border: 0.5px solid var(--cds-tag-hover-magenta);
+  color: var(--cds-link-primary);
+  background: color-mix(in oklab, var(--cds-button-primary) 14%, transparent);
+  border: 0.5px solid color-mix(in oklab, var(--cds-button-primary) 42%, white);
   border-radius: 8px;
 }
 
