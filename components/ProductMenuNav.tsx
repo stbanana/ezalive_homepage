@@ -110,7 +110,7 @@ export default function ProductMenuNav({ locale }: { locale: string }) {
       <Link
         href={`/${locale}/products`}
         data-active={isActive}
-        className="inline-block px-2 py-2 cursor-pointer hover:text-fd-primary font-medium"
+        className="inline-flex items-center p-2 text-sm leading-5 cursor-pointer hover:text-fd-primary font-medium"
         tabIndex={0}
         onClick={() => setOpen(false)}
       >

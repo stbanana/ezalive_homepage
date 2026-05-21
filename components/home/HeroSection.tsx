@@ -25,8 +25,6 @@ export default function HeroSection({
     const scopeRef = useRef<HTMLDivElement | null>(null);
     const scopeLineRef = useRef<SVGPathElement | null>(null);
     const scopeTrailRef = useRef<SVGPathElement | null>(null);
-    const vTargetRef = useRef<HTMLDivElement | null>(null);
-    const vFlashRef = useRef<HTMLDivElement | null>(null);
     const logoImageRef = useRef<HTMLImageElement | null>(null);
     const visualRef = useRef<HTMLDivElement | null>(null);
 
@@ -121,11 +119,8 @@ export default function HeroSection({
         const scope = scopeRef.current;
         const line = scopeLineRef.current;
         const trail = scopeTrailRef.current;
-        const vTarget = vTargetRef.current;
-        const vFlash = vFlashRef.current;
-        const logoImage = logoImageRef.current;
         const visual = visualRef.current;
-        if (!root || !scope || !line || !trail || !vTarget || !vFlash || !logoImage || !visual) return;
+        if (!root || !scope || !line || !trail || !visual) return;
 
         const prefersReducedMotion =
             typeof window !== 'undefined' &&
@@ -134,19 +129,25 @@ export default function HeroSection({
         const ctx = gsap.context(() => {
             if (prefersReducedMotion) {
                 gsap.set('[data-scope-layer]', { autoAlpha: 0 });
-                gsap.set('[data-hero-glow], [data-hero-title], [data-hero-desc], [data-hero-cta], [data-hero-badge], [data-hero-visual-card], [data-v-pulse]', {
+                gsap.set('[data-hero-glow], [data-hero-title], [data-hero-desc], [data-hero-cta], [data-hero-badge], [data-hero-visual-card]', {
                     clearProps: 'all',
                 });
-                gsap.set(vFlash, { clearProps: 'all' });
                 return;
             }
 
             gsap.set('[data-hero-glow]', { opacity: 0, scale: 0.92 });
-            gsap.set('[data-hero-title], [data-hero-desc], [data-hero-cta], [data-hero-badge]', { opacity: 0, y: 18 });
-            gsap.set('[data-hero-visual-card]', { opacity: 0, y: 24, rotateX: 5 });
-            gsap.set('[data-v-pulse]', { autoAlpha: 0, scale: 0.82 });
-            gsap.set(vFlash, { autoAlpha: 0, scale: 0.5 });
+            gsap.set('[data-hero-title], [data-hero-desc], [data-hero-cta]', { opacity: 0, y: 18 });
+            gsap.set('[data-hero-badge]', { opacity: 0, y: 12 });
             gsap.set('[data-scope-layer]', { autoAlpha: 1 });
+
+            gsap.to('[data-hero-badge]', {
+                y: 0,
+                opacity: 1,
+                duration: 0.42,
+                stagger: 0.08,
+                ease: 'power2.out',
+                delay: 0.24,
+            });
 
             const signal: SignalState = {
                 acMix: 0,
@@ -172,22 +173,6 @@ export default function HeroSection({
             gsap.set(trail, {
                 strokeDasharray: baseLength,
                 strokeDashoffset: baseLength,
-            });
-
-            const scopeBounds = scope.getBoundingClientRect();
-            const targetBounds = vTarget.getBoundingClientRect();
-            const logoBounds = logoImage.getBoundingClientRect();
-            const dx = targetBounds.left + targetBounds.width / 2 - (scopeBounds.left + scopeBounds.width / 2);
-            const dy = targetBounds.top + targetBounds.height / 2 - (scopeBounds.top + scopeBounds.height / 2);
-            const logoDx = targetBounds.left + targetBounds.width / 2 - (logoBounds.left + logoBounds.width / 2);
-            const logoDy = targetBounds.top + targetBounds.height / 2 - (logoBounds.top + logoBounds.height / 2);
-
-            gsap.set(logoImage, {
-                x: logoDx,
-                y: logoDy,
-                scale: 0.16,
-                opacity: 0,
-                transformOrigin: 'center',
             });
 
             const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
@@ -247,67 +232,15 @@ export default function HeroSection({
                     duration: 0.22,
                 }, '>-0.05')
                 .to('[data-scope-label-v]', { autoAlpha: 1, duration: 0.2 }, '<')
-                .to({}, { duration: 0.25 })
+                .to({}, { duration: 0.4 })
                 .to(scope, {
-                    x: dx,
-                    y: dy,
-                    scale: 0.21,
+                    scale: 0.72,
                     opacity: 0,
-                    duration: 0.85,
+                    duration: 0.45,
                     ease: 'power3.inOut',
                     transformOrigin: 'center',
                 })
-                .to('[data-v-pulse]', {
-                    autoAlpha: 1,
-                    scale: 1.08,
-                    duration: 0.25,
-                    yoyo: true,
-                    repeat: 1,
-                }, '-=0.2')
-                .to(vFlash, {
-                    autoAlpha: 0.85,
-                    scale: 1,
-                    duration: 0.14,
-                    ease: 'power2.out',
-                    yoyo: true,
-                    repeat: 1,
-                }, '<0.01')
-                .to('[data-v-pulse]', { autoAlpha: 0, duration: 0.12 }, '>-0.04')
                 .to('[data-scope-layer]', { autoAlpha: 0, duration: 0.2 }, '<0.02')
-                .fromTo(
-                    '[data-hero-visual-card]',
-                    { y: 24, opacity: 0, rotateX: 5 },
-                    { y: 0, opacity: 1, rotateX: 0, duration: 0.46, ease: 'power2.out' },
-                    '-=0.08',
-                )
-                .to(logoImage, {
-                    duration: 0.84,
-                    keyframes: [
-                        {
-                            x: logoDx * 0.12,
-                            y: logoDy * 0.12,
-                            scale: 0.42,
-                            opacity: 0.35,
-                            ease: 'power1.out',
-                            duration: 0.18,
-                        },
-                        {
-                            x: -5,
-                            y: 3,
-                            scale: 1.07,
-                            opacity: 1,
-                            ease: 'power3.out',
-                            duration: 0.42,
-                        },
-                        {
-                            x: 0,
-                            y: 0,
-                            scale: 1,
-                            ease: 'sine.out',
-                            duration: 0.24,
-                        },
-                    ],
-                }, '<0.02')
             tl.fromTo(
                 '[data-hero-glow]',
                 { opacity: 0, scale: 0.92 },
@@ -331,12 +264,6 @@ export default function HeroSection({
                     { y: 16, opacity: 0 },
                     { y: 0, opacity: 1, duration: 0.52, stagger: 0.1 },
                     '-=0.4',
-                )
-                .fromTo(
-                    '[data-hero-badge]',
-                    { y: 12, opacity: 0 },
-                    { y: 0, opacity: 1, duration: 0.45, stagger: 0.08 },
-                    '-=0.45',
                 );
 
             gsap.to('[data-hero-glow]', {
@@ -396,16 +323,16 @@ export default function HeroSection({
         >
             <div
                 data-scope-layer
-                className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center"
+                className="pointer-events-none absolute left-4 right-4 top-6 z-20 md:inset-0 md:grid md:grid-cols-[1.1fr_0.9fr] md:items-stretch md:px-10 md:py-12"
             >
                 <div
                     ref={scopeRef}
-                    className="relative w-[min(86%,760px)] rounded-xl border border-fd-primary/40 bg-fd-background/90 px-4 py-4 shadow-2xl"
+                    className="relative min-h-44 w-full rounded-xl border border-fd-primary/40 bg-fd-background/90 px-4 py-4 shadow-2xl md:mr-8 md:min-h-72 md:max-w-none"
                 >
                     <div className="absolute left-4 top-3 text-[11px] font-medium tracking-wider text-fd-muted-foreground/80">
                         SIGNAL BOOT SEQUENCE
                     </div>
-                    <svg viewBox="0 0 760 180" className="h-40 w-full">
+                    <svg viewBox="0 0 760 180" className="h-28 w-full md:h-52">
                         <defs>
                             <linearGradient id="waveStroke" x1="0%" y1="0%" x2="100%" y2="0%">
                                 <stop offset="0%" stopColor="color-mix(in oklab, var(--color-fd-primary) 35%, white)" />
@@ -492,7 +419,7 @@ export default function HeroSection({
                 </div>
 
                 <div ref={visualRef} className="relative flex items-center justify-center" data-hero-visual-card>
-                    <div className="relative w-full max-w-md overflow-hidden rounded-2xl border border-fd-border/80 bg-fd-background/85 p-6 shadow-xl">
+                    <div className="relative min-h-72 w-full max-w-md overflow-hidden rounded-2xl border border-fd-border/80 bg-fd-background/85 p-6 shadow-xl">
                         <div
                             className="pointer-events-none absolute inset-0 opacity-60"
                             style={{
@@ -505,21 +432,6 @@ export default function HeroSection({
                             src="/品牌logo.png"
                             alt={brandLogoAlt}
                             className="relative mx-auto w-80 rounded-lg border border-dashed border-fd-border bg-fd-card/60 p-6"
-                        />
-                        <div
-                            ref={vTargetRef}
-                            data-v-pulse
-                            className="absolute left-1/2 top-[42%] grid h-10 w-10 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-fd-primary/45 bg-fd-background/85 text-lg font-bold tracking-tight text-fd-primary"
-                        >
-                            V
-                        </div>
-                        <div
-                            ref={vFlashRef}
-                            className="pointer-events-none absolute left-1/2 top-[42%] h-14 w-14 -translate-x-1/2 -translate-y-1/2 rounded-full"
-                            style={{
-                                background:
-                                    'radial-gradient(circle, color-mix(in oklab, var(--color-fd-primary) 34%, white) 0%, transparent 72%)',
-                            }}
                         />
                         <div className="relative mt-5 grid grid-cols-3 gap-2">
                             <span data-hero-badge className="rounded-md border border-fd-border/70 bg-fd-card/80 px-2 py-1 text-center text-[11px] text-fd-muted-foreground">AC/DC</span>
