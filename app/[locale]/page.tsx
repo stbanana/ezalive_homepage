@@ -1,7 +1,7 @@
 ﻿import type { ComponentType } from 'react';
-import CdsButton from '@/components/ui/cds-button';
 import LanguageNotice from '@/components/LanguageNotice';
 import HeroSection from '@/components/home/HeroSection';
+import HomeProductsSection from '@/components/home/HomeProductsSection';
 import { getMdxComponents } from '@/mdx-components';
 import { getDictionary } from '@/lib/dictionaries';
 import { i18n } from '@/lib/i18n';
@@ -33,9 +33,18 @@ export default async function HomePage({ params }: PageProps) {
   const Content = (await homeMdxMap[locale]()).default;
   const dict = await getDictionary(locale);
   const homepageProducts = getHomepageProducts(HOME_PRODUCT_LIMIT);
+  const localizedHomepageProducts = homepageProducts.map((product) => {
+    const localizedProduct = getLocalizedProduct(product, locale);
+
+    return {
+      slug: product.slug,
+      model: product.model,
+      name: localizedProduct.name,
+      summary: localizedProduct.summary,
+      coreSpecs: localizedProduct.coreSpecs,
+    };
+  });
   const placeholderCount = Math.max(0, HOME_PRODUCT_LIMIT - homepageProducts.length);
-  const gridColor =
-    'color-mix(in oklab, var(--color-fd-primary) 10%, transparent)';
 
   return (
     <div className="relative min-h-screen">
@@ -74,61 +83,15 @@ export default async function HomePage({ params }: PageProps) {
             </div>
           </section>
 
-          <section className="md:-mx-4 lg:-mx-8">
-            <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-              <h2>
-                {dict.home.products.title}
-              </h2>
-              <a
-                className="text-sm font-medium text-fd-primary hover:underline"
-                href={`/${locale}/products`}
-              >
-                {dict.home.products.viewAll}
-              </a>
-            </div>
-            <div className="grid gap-6 md:grid-cols-3">
-              {homepageProducts.map((product) => {
-                const localizedProduct = getLocalizedProduct(product, locale);
-
-                return (
-                  <a
-                    key={`${product.slug}-${product.model}`}
-                    className="group flex h-full flex-col rounded-2xl border border-fd-primary/80 bg-fd-card/90 p-6 shadow-lg transition-all hover:scale-[1.03] hover:border-fd-primary/90 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fd-primary"
-                    href={`/${locale}/products/${product.slug}`}
-                  >
-                    <div className="mb-2 flex items-center gap-3">
-                      <span className="text-lg font-extrabold tracking-widest text-fd-primary">
-                        {product.model}
-                      </span>
-                    </div>
-                    <div className="mb-2 text-base font-bold text-fd-foreground">
-                      {localizedProduct.name}
-                    </div>
-                    <p className="mb-4 flex-1 text-sm text-fd-muted-foreground">
-                      {localizedProduct.summary}
-                    </p>
-                    <div className="mb-4 text-xs text-fd-muted-foreground">
-                      {dict.common.labels.coreSpecs}: {localizedProduct.coreSpecs.join(' · ')}
-                    </div>
-                    <div className="mt-auto flex items-center gap-1 text-sm font-semibold text-fd-foreground group-hover:text-fd-primary transition">
-                      {dict.home.products.details}
-                      <svg className="ml-1 h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                    </div>
-                  </a>
-                );
-              })}
-
-              {Array.from({ length: placeholderCount }).map((_, index) => (
-                <div
-                  key={`coming-soon-${index}`}
-                  className="flex h-full flex-col items-center justify-center rounded-2xl border-2 border-dashed border-fd-border bg-fd-card/80 p-6 text-fd-muted-foreground"
-                >
-                  <span className="mb-2 text-2xl font-bold">+</span>
-                  <span className="text-sm">{dict.home.products.comingSoon}</span>
-                </div>
-              ))}
-            </div>
-          </section>
+          <HomeProductsSection
+            locale={locale}
+            title={dict.home.products.title}
+            viewAll={dict.home.products.viewAll}
+            details={dict.home.products.details}
+            comingSoon={dict.home.products.comingSoon}
+            products={localizedHomepageProducts}
+            placeholderCount={placeholderCount}
+          />
 
           <section className="rounded-2xl border border-fd-border bg-fd-card/90 p-8 shadow-md">
             <div className="prose max-w-none text-fd-foreground">
