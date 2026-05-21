@@ -24,72 +24,108 @@ export default function HeroSection({
     const rootRef = useRef<HTMLElement | null>(null);
     const scopeRef = useRef<HTMLDivElement | null>(null);
     const scopeLineRef = useRef<SVGPathElement | null>(null);
+    const scopeTrailRef = useRef<SVGPathElement | null>(null);
     const vTargetRef = useRef<HTMLDivElement | null>(null);
+    const vFlashRef = useRef<HTMLDivElement | null>(null);
     const logoImageRef = useRef<HTMLImageElement | null>(null);
     const visualRef = useRef<HTMLDivElement | null>(null);
 
-    const buildPath = (
-        mode: 'dc' | 'ac' | 'heartbeat',
+    type SignalState = {
+        acMix: number;
+        hbMix: number;
+        phase: number;
+        amp: number;
+        jitter: number;
+    };
+
+    const buildSignalPath = (
+        signal: SignalState,
         width = 760,
         height = 180,
     ) => {
         const mid = height / 2;
         const left = 18;
         const right = width - 18;
+        const steps = 92;
+        const d: string[] = [];
 
-        if (mode === 'dc') {
-            const points = [
-                `M ${left} ${mid + 20}`,
-                `L ${left + 95} ${mid + 20}`,
-                `L ${left + 95} ${mid - 40}`,
-                `L ${left + 210} ${mid - 40}`,
-                `L ${left + 210} ${mid + 28}`,
-                `L ${left + 320} ${mid + 28}`,
-                `L ${left + 320} ${mid - 30}`,
-                `L ${left + 455} ${mid - 30}`,
-                `L ${left + 455} ${mid + 24}`,
-                `L ${right} ${mid + 24}`,
-            ];
-            return points.join(' ');
-        }
+        for (let i = 0; i <= steps; i += 1) {
+            const u = i / steps;
+            const x = left + (right - left) * u;
 
-        if (mode === 'ac') {
-            const steps = 52;
-            const amp = 34;
-            const d: string[] = [];
-            for (let i = 0; i <= steps; i += 1) {
-                const t = i / steps;
-                const x = left + (right - left) * t;
-                const y = mid + Math.sin(t * Math.PI * 5.2) * amp;
-                d.push(`${i === 0 ? 'M' : 'L'} ${x.toFixed(2)} ${y.toFixed(2)}`);
+            // 6-point step DC: 0V -> 30V -> 50V -> 80V -> 130V -> 0V
+            const stepLevels = [0, 30, 50, 80, 130, 0];
+            // Keep step DC stable; only let phase affect it when blending into AC.
+            const stairPos = (u * 1.02 + signal.phase * 0.12 * signal.acMix) % 1;
+            const segPos = stairPos * stepLevels.length;
+            const segIndex = Math.floor(segPos);
+            const local = segPos - segIndex;
+            const currentLevel = stepLevels[segIndex];
+            const nextLevel = stepLevels[(segIndex + 1) % stepLevels.length];
+
+            // Keep long plateaus and make edges very steep.
+            const edgeStart = 0.94;
+            const edgeMix = local < edgeStart
+                ? 0
+                : 0.5 + 0.5 * Math.tanh((local - edgeStart) * 80);
+            const stepped = currentLevel + (nextLevel - currentLevel) * edgeMix;
+
+            // Slight overshoot/ringing on each step transition.
+            const ringProgress = Math.max(0, (local - edgeStart) / (1 - edgeStart));
+            const delta = nextLevel - currentLevel;
+            const ringing = delta > 0
+                ? Math.sin(ringProgress * Math.PI * 2.6) *
+                Math.exp(-ringProgress * 7.5) *
+                delta * 0.1
+                : 0;
+
+            const stepScale = 0.44;
+            const dcWave = -(stepped + ringing) * stepScale;
+            const acWave = 31 * Math.sin((u * 4.7 + signal.phase) * Math.PI * 2);
+
+            const beatCenter = 0.46;
+            // V-signature: 0 -> +85V -> -85V -> 0 with straight triangle edges.
+            const triWindow = 0.16;
+            const triStart = beatCenter - triWindow * 0.5;
+            const triT = (u - triStart) / triWindow;
+            let heartbeatWave = 0;
+            if (triT >= 0 && triT <= 1) {
+                if (triT < 1 / 3) {
+                    heartbeatWave = (triT / (1 / 3)) * 85;
+                } else if (triT < 2 / 3) {
+                    heartbeatWave = 85 - ((triT - 1 / 3) / (1 / 3)) * 170;
+                } else {
+                    heartbeatWave = -85 + ((triT - 2 / 3) / (1 / 3)) * 85;
+                }
             }
-            return d.join(' ');
+            // Screen coordinates grow downward on Y, so invert to make it display as high -> low.
+            heartbeatWave *= -1;
+
+            const baseWave = dcWave * (1 - signal.acMix) + acWave * signal.acMix;
+            const mixedWave = baseWave * (1 - signal.hbMix) + heartbeatWave * signal.hbMix;
+            const noiseMix = signal.acMix * (1 - signal.hbMix);
+            const noise =
+                signal.jitter * noiseMix *
+                (Math.sin(u * 90 + signal.phase * 20) + Math.sin(u * 52 - signal.phase * 14)) *
+                0.45;
+
+            const y = mid + mixedWave * signal.amp + noise;
+            d.push(`${i === 0 ? 'M' : 'L'} ${x.toFixed(2)} ${y.toFixed(2)}`);
         }
 
-        const points = [
-            `M ${left} ${mid + 5}`,
-            `L ${left + 180} ${mid + 5}`,
-            `L ${left + 250} ${mid + 5}`,
-            `L ${left + 275} ${mid - 24}`,
-            `L ${left + 303} ${mid + 52}`,
-            `L ${left + 336} ${mid - 82}`,
-            `L ${left + 372} ${mid + 4}`,
-            `L ${left + 420} ${mid + 4}`,
-            `L ${left + 470} ${mid - 18}`,
-            `L ${left + 525} ${mid + 5}`,
-            `L ${right} ${mid + 5}`,
-        ];
-        return points.join(' ');
+        return d.join(' ');
     };
 
     useEffect(() => {
         const root = rootRef.current;
         const scope = scopeRef.current;
         const line = scopeLineRef.current;
+        const trail = scopeTrailRef.current;
         const vTarget = vTargetRef.current;
+        const vFlash = vFlashRef.current;
         const logoImage = logoImageRef.current;
         const visual = visualRef.current;
-        if (!root || !scope || !line || !vTarget || !logoImage || !visual) return;
+        if (!root || !scope || !line || !trail || !vTarget || !vFlash || !logoImage || !visual) return;
 
         const prefersReducedMotion =
             typeof window !== 'undefined' &&
@@ -101,6 +137,7 @@ export default function HeroSection({
                 gsap.set('[data-hero-glow], [data-hero-title], [data-hero-desc], [data-hero-cta], [data-hero-badge], [data-hero-visual-card], [data-v-pulse]', {
                     clearProps: 'all',
                 });
+                gsap.set(vFlash, { clearProps: 'all' });
                 return;
             }
 
@@ -108,11 +145,31 @@ export default function HeroSection({
             gsap.set('[data-hero-title], [data-hero-desc], [data-hero-cta], [data-hero-badge]', { opacity: 0, y: 18 });
             gsap.set('[data-hero-visual-card]', { opacity: 0, y: 24, rotateX: 5 });
             gsap.set('[data-v-pulse]', { autoAlpha: 0, scale: 0.82 });
+            gsap.set(vFlash, { autoAlpha: 0, scale: 0.5 });
             gsap.set('[data-scope-layer]', { autoAlpha: 1 });
-            gsap.set(line, { attr: { d: buildPath('dc') } });
+
+            const signal: SignalState = {
+                acMix: 0,
+                hbMix: 0,
+                phase: 0,
+                amp: 1,
+                jitter: 0.7,
+            };
+            const updateSignal = () => {
+                const d = buildSignalPath(signal);
+                line.setAttribute('d', d);
+                trail.setAttribute('d', d);
+            };
+
+            updateSignal();
+            gsap.set(trail, { autoAlpha: 0 });
 
             const baseLength = line.getTotalLength();
             gsap.set(line, {
+                strokeDasharray: baseLength,
+                strokeDashoffset: baseLength,
+            });
+            gsap.set(trail, {
                 strokeDasharray: baseLength,
                 strokeDashoffset: baseLength,
             });
@@ -140,21 +197,55 @@ export default function HeroSection({
                 ease: 'power2.out',
             })
                 .to('[data-scope-label-dc]', { autoAlpha: 1, duration: 0.2 }, '<')
-                .to({}, { duration: 0.28 })
+                .to(signal, {
+                    phase: 0.08,
+                    duration: 0.26,
+                    ease: 'none',
+                    onUpdate: updateSignal,
+                }, '<')
                 .to('[data-scope-label-dc]', { autoAlpha: 0, duration: 0.2 })
-                .to(line, {
-                    attr: { d: buildPath('ac') },
-                    duration: 0.65,
+                .to(signal, {
+                    acMix: 1,
+                    phase: 0.3,
+                    jitter: 0.24,
+                    duration: 0.76,
                     ease: 'sine.inOut',
+                    onUpdate: updateSignal,
                 })
                 .to('[data-scope-label-ac]', { autoAlpha: 1, duration: 0.18 }, '<0.05')
-                .to({}, { duration: 0.28 })
+                .to(signal, {
+                    jitter: 0.1,
+                    duration: 0.2,
+                    ease: 'sine.out',
+                    onUpdate: updateSignal,
+                }, '>')
+                .to(signal, {
+                    phase: 0.56,
+                    duration: 0.52,
+                    ease: 'none',
+                    onUpdate: updateSignal,
+                }, '>')
                 .to('[data-scope-label-ac]', { autoAlpha: 0, duration: 0.2 })
-                .to(line, {
-                    attr: { d: buildPath('heartbeat') },
-                    duration: 0.62,
+                .to(signal, {
+                    hbMix: 1,
+                    acMix: 0,
+                    phase: 0.58,
+                    jitter: 0.22,
+                    amp: 0.98,
+                    duration: 0.82,
                     ease: 'power2.inOut',
+                    onUpdate: updateSignal,
                 })
+                .set(trail, { autoAlpha: 0.55, strokeDashoffset: baseLength }, '>-0.06')
+                .to(trail, {
+                    strokeDashoffset: 0,
+                    duration: 0.34,
+                    ease: 'power2.out',
+                }, '>-0.01')
+                .to(trail, {
+                    autoAlpha: 0,
+                    duration: 0.22,
+                }, '>-0.05')
                 .to('[data-scope-label-v]', { autoAlpha: 1, duration: 0.2 }, '<')
                 .to({}, { duration: 0.25 })
                 .to(scope, {
@@ -173,6 +264,14 @@ export default function HeroSection({
                     yoyo: true,
                     repeat: 1,
                 }, '-=0.2')
+                .to(vFlash, {
+                    autoAlpha: 0.85,
+                    scale: 1,
+                    duration: 0.14,
+                    ease: 'power2.out',
+                    yoyo: true,
+                    repeat: 1,
+                }, '<0.01')
                 .to('[data-v-pulse]', { autoAlpha: 0, duration: 0.12 }, '>-0.04')
                 .to('[data-scope-layer]', { autoAlpha: 0, duration: 0.2 }, '<0.02')
                 .fromTo(
@@ -182,12 +281,32 @@ export default function HeroSection({
                     '-=0.08',
                 )
                 .to(logoImage, {
-                    x: 0,
-                    y: 0,
-                    scale: 1,
-                    opacity: 1,
-                    duration: 0.72,
-                    ease: 'back.out(1.7)',
+                    duration: 0.84,
+                    keyframes: [
+                        {
+                            x: logoDx * 0.12,
+                            y: logoDy * 0.12,
+                            scale: 0.42,
+                            opacity: 0.35,
+                            ease: 'power1.out',
+                            duration: 0.18,
+                        },
+                        {
+                            x: -5,
+                            y: 3,
+                            scale: 1.07,
+                            opacity: 1,
+                            ease: 'power3.out',
+                            duration: 0.42,
+                        },
+                        {
+                            x: 0,
+                            y: 0,
+                            scale: 1,
+                            ease: 'sine.out',
+                            duration: 0.24,
+                        },
+                    ],
                 }, '<0.02')
             tl.fromTo(
                 '[data-hero-glow]',
@@ -304,6 +423,16 @@ export default function HeroSection({
                             strokeLinejoin="round"
                             fill="none"
                         />
+                        <path
+                            ref={scopeTrailRef}
+                            d="M 18 90 L 742 90"
+                            stroke="color-mix(in oklab, var(--color-fd-primary) 42%, white)"
+                            strokeWidth="5.6"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            fill="none"
+                            style={{ filter: 'blur(2px)' }}
+                        />
                     </svg>
                     <div data-scope-label-dc className="absolute bottom-3 right-4 text-xs font-medium text-fd-primary/85 opacity-0">DC LEVEL</div>
                     <div data-scope-label-ac className="absolute bottom-3 right-4 text-xs font-medium text-fd-primary/85 opacity-0">AC SWEEP</div>
@@ -384,6 +513,14 @@ export default function HeroSection({
                         >
                             V
                         </div>
+                        <div
+                            ref={vFlashRef}
+                            className="pointer-events-none absolute left-1/2 top-[42%] h-14 w-14 -translate-x-1/2 -translate-y-1/2 rounded-full"
+                            style={{
+                                background:
+                                    'radial-gradient(circle, color-mix(in oklab, var(--color-fd-primary) 34%, white) 0%, transparent 72%)',
+                            }}
+                        />
                         <div className="relative mt-5 grid grid-cols-3 gap-2">
                             <span data-hero-badge className="rounded-md border border-fd-border/70 bg-fd-card/80 px-2 py-1 text-center text-[11px] text-fd-muted-foreground">AC/DC</span>
                             <span data-hero-badge className="rounded-md border border-fd-border/70 bg-fd-card/80 px-2 py-1 text-center text-[11px] text-fd-muted-foreground">Bidirectional</span>
