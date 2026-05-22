@@ -3,7 +3,7 @@
 ## 项目交接说明
 
 - 项目名称：ezalive_homepage
-- 技术栈：Next.js 15 (App Router)、Fumadocs UI/MDX、TailwindCSS v4
+- 技术栈：Next.js 16 (App Router, Turbopack)、Fumadocs UI/MDX、TailwindCSS v4
 - 多语言支持：zh / en
 - 主要页面：
   - 首页（/zh, /en）
@@ -16,6 +16,28 @@
 - 设计文档、AI TODO、SESSION_LOG 详见对应文件
 - 搜索：Orama + 中文分词（@orama/tokenizers），内容/产品分区展示
 - i18n：页面文案字典化收尾完成（locales + 产品数据 + MDX）
+- 产品元信息：`name` 已移除，采用 `model`（型号主标识）+ `series`（有限集合）+ `category`（acdc/ac/dc）+ `coreSpecs` + `communicationInterfaces` + `communicationProtocols`
+
+## 产品数据模型与分组策略（最新）
+
+- `data/products.ts` 中 `series` 已改为有限集合键值（`ProductSeries`），不再在每个产品项重复书写自由文本。
+- 使用 `PRODUCT_SERIES_LABELS` 统一映射中英文系列文案；新增产品时只需选择系列键。
+- 顶部“产品中心”悬停菜单：
+  - 一级：按 `category`（acdc/ac/dc）
+  - 二级：按 `series` 聚合
+  - 三级：型号卡（`model`）
+- `/[locale]/products` 页面已与顶部菜单对齐：
+  - 增加复选筛选（全部/交直流/交流/直流）
+  - 展示结构为“分类 -> 系列 -> 型号卡”
+  - 过滤逻辑采用联动模式：`全部` 勾选时子项全选；取消任意子项时自动取消 `全部`。
+
+## 当前视觉与交互状态（最新）
+
+- 顶部导航圆角与下拉并存：圆角容器已恢复；下拉面板不被裁切。
+- 顶部“产品中心”“关于我们”菜单响应式行为：
+  - 桌面：悬停下拉，且面板防溢出定位
+  - 移动/无悬停设备：点击展开内联菜单
+  - 切换条件已改为跟随父级 nav 桌面 tab 实际可见性，避免阈值错位。
 
 ## 静态化路由与多语言重要备忘
 - 由于项目为纯静态导出（`output: 'export'`），Next.js 的 `i18n` 中间件不可用。
