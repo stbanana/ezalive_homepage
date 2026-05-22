@@ -1,5 +1,7 @@
 
 import ProductMenuNav from '@/components/ProductMenuNav';
+import AboutMenuNav from '@/components/AboutMenuNav';
+import StaticMenuNav from '@/components/StaticMenuNav';
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
 import { i18n } from '@/lib/i18n';
 
@@ -10,6 +12,7 @@ const labels = {
     home: '首页',
     products: '产品中心',
     about: '关于我们',
+    news: '新闻动态',
     contact: '联系',
     switch: 'English'
   },
@@ -17,6 +20,7 @@ const labels = {
     home: 'Home',
     products: 'Products',
     about: 'About',
+    news: 'News',
     contact: 'Contact',
     switch: '中文'
   }
@@ -47,23 +51,20 @@ export function baseOptions(locale: Locale): BaseLayoutProps {
     },
     links: [
       {
-        text: labels[locale].home,
-        url: `/${locale}`,
-        active: 'url'
+        type: 'custom',
+        children: <StaticMenuNav locale={locale} type="home" />,
       },
       {
         type: 'custom',
         children: <ProductMenuNav locale={locale} />,
       },
       {
-        text: labels[locale].about,
-        url: `/${locale}/about`,
-        active: 'url'
+        type: 'custom',
+        children: <AboutMenuNav locale={locale} />,
       },
       {
-        text: labels[locale].contact,
-        url: `/${locale}/contact`,
-        active: 'url'
+        type: 'custom',
+        children: <StaticMenuNav locale={locale} type="contact" />,
       },
       {
         text: labels[locale].switch,

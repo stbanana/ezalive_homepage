@@ -1,6 +1,8 @@
 ﻿import LanguageNotice from '@/components/LanguageNotice';
 import HeroSection from '@/components/home/HeroSection';
 import HomeProductsSection from '@/components/home/HomeProductsSection';
+import HomeNewsSection from '@/components/home/HomeNewsSection';
+import { getLatestNews } from '@/lib/news';
 import { getDictionary } from '@/lib/dictionaries';
 import { i18n } from '@/lib/i18n';
 import {
@@ -36,6 +38,7 @@ export default async function HomePage({ params }: PageProps) {
       coreSpecs: localizedProduct.coreSpecs,
     };
   });
+  const latestNews = await getLatestNews(locale, 3);
   const placeholderCount = Math.max(0, HOME_PRODUCT_LIMIT - homepageProducts.length);
   const trustTitle = locale === 'zh' ? '为何选择易启测' : 'Why Teams Choose Ezalive';
   const trustLead = locale === 'zh'
@@ -73,6 +76,15 @@ export default async function HomePage({ params }: PageProps) {
         text: 'A modular architecture makes it easy to scale power levels, test items, and scenarios over time.',
       },
     ];
+  const newsTitle = locale === 'zh' ? '新闻动态' : 'Newsroom';
+  const newsDescription = locale === 'zh'
+    ? '了解我们近期的产品迭代、测试实践与应用进展，持续跟进团队能力演进。'
+    : 'Follow our recent product updates, testing practices, and application progress.';
+  const newsViewAll = locale === 'zh' ? '查看全部动态 →' : 'View all updates →';
+  const newsItems = latestNews.map((item) => ({
+    ...item,
+    href: `/${locale}/news/${item.slug}`,
+  }));
 
   return (
     <div className="relative min-h-screen">
@@ -148,6 +160,15 @@ export default async function HomePage({ params }: PageProps) {
               </div>
             </div>
           </section>
+
+          <HomeNewsSection
+            locale={locale}
+            title={newsTitle}
+            description={newsDescription}
+            viewAll={newsViewAll}
+            viewAllHref={`/${locale}/news`}
+            items={newsItems}
+          />
 
           <section id="contact" className="rounded-2xl border border-fd-border bg-fd-card/90 p-8 shadow-md">
             <h2>

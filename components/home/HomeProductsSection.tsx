@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 type Locale = 'zh' | 'en';
 
@@ -32,12 +33,47 @@ export default function HomeProductsSection({
     placeholderCount,
 }: HomeProductsSectionProps) {
     const sectionRef = useRef<HTMLElement | null>(null);
+    const hasPathInitRef = useRef(false);
     const [isVisible, setIsVisible] = useState(false);
+    const [observerKey, setObserverKey] = useState(0);
+    const pathname = usePathname();
     const viewAllLabel = viewAll.replace(/\s*[→›»]+$/, '').trim();
+
+    useEffect(() => {
+        const onPageShow = (event: PageTransitionEvent) => {
+            if (event.persisted) {
+                setIsVisible(true);
+            }
+        };
+
+        const onPopState = () => {
+            setIsVisible(true);
+        };
+
+        window.addEventListener('pageshow', onPageShow);
+        window.addEventListener('popstate', onPopState);
+        return () => {
+            window.removeEventListener('pageshow', onPageShow);
+            window.removeEventListener('popstate', onPopState);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (!hasPathInitRef.current) {
+            hasPathInitRef.current = true;
+            return;
+        }
+
+        const homePath = `/${locale}`;
+        if (pathname === homePath || pathname === `${homePath}/`) {
+            setIsVisible(true);
+        }
+    }, [locale, pathname]);
 
     useEffect(() => {
         const section = sectionRef.current;
         if (!section) return;
+        if (isVisible) return;
 
         const prefersReducedMotion =
             typeof window !== 'undefined' &&
@@ -48,13 +84,37 @@ export default function HomeProductsSection({
             return;
         }
 
-        const observer = new IntersectionObserver(
+        let observer: IntersectionObserver | null = null;
+
+        const checkInView = () => {
+            const rect = section.getBoundingClientRect();
+            const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+            const visible = rect.top < viewportHeight * 0.92 && rect.bottom > 0;
+
+            if (visible) {
+                setIsVisible(true);
+                if (observer) {
+                    observer.disconnect();
+                    observer = null;
+                }
+                window.removeEventListener('scroll', checkInView);
+                window.removeEventListener('resize', checkInView);
+            }
+        };
+
+        checkInView();
+        if (isVisible) return;
+
+        observer = new IntersectionObserver(
             (entries) => {
                 const [entry] = entries;
                 if (!entry) return;
                 if (entry.isIntersecting) {
                     setIsVisible(true);
-                    observer.disconnect();
+                    observer?.disconnect();
+                    observer = null;
+                    window.removeEventListener('scroll', checkInView);
+                    window.removeEventListener('resize', checkInView);
                 }
             },
             {
@@ -64,9 +124,15 @@ export default function HomeProductsSection({
         );
 
         observer.observe(section);
+        window.addEventListener('scroll', checkInView, { passive: true });
+        window.addEventListener('resize', checkInView);
 
-        return () => observer.disconnect();
-    }, []);
+        return () => {
+            observer?.disconnect();
+            window.removeEventListener('scroll', checkInView);
+            window.removeEventListener('resize', checkInView);
+        };
+    }, [isVisible, observerKey]);
 
     return (
         <section ref={sectionRef} className="relative md:-mx-4 lg:-mx-8">

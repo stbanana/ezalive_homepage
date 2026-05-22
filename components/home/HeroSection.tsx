@@ -115,12 +115,29 @@ export default function HeroSection({
     };
 
     useEffect(() => {
+        const navEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
+        if (navEntry?.type === 'back_forward') {
+            window.location.reload();
+            return;
+        }
+
+        const onPageShow = (event: PageTransitionEvent) => {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        };
+
+        window.addEventListener('pageshow', onPageShow);
+
         const root = rootRef.current;
         const scope = scopeRef.current;
         const line = scopeLineRef.current;
         const trail = scopeTrailRef.current;
         const visual = visualRef.current;
-        if (!root || !scope || !line || !trail || !visual) return;
+        if (!root || !scope || !line || !trail || !visual) {
+            window.removeEventListener('pageshow', onPageShow);
+            return;
+        }
 
         const prefersReducedMotion =
             typeof window !== 'undefined' &&
@@ -310,6 +327,7 @@ export default function HeroSection({
         root.addEventListener('mouseleave', onMouseLeave);
 
         return () => {
+            window.removeEventListener('pageshow', onPageShow);
             root.removeEventListener('mousemove', onMouseMove);
             root.removeEventListener('mouseleave', onMouseLeave);
             ctx.revert();
