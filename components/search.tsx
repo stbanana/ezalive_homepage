@@ -204,10 +204,12 @@ export default function CustomSearchDialog({
         return localizedProducts.filter((product) => {
             const keywords = [
                 product.model,
-                product.name,
+                product.series,
                 product.summary,
                 product.slug,
                 ...(product.coreSpecs ?? []),
+                ...(product.communicationInterfaces ?? []),
+                ...(product.communicationProtocols ?? []),
             ];
 
             return keywords.some((keyword) => matchesKeyword(trimmedSearch, keyword));
@@ -355,10 +357,16 @@ export default function CustomSearchDialog({
                                         {product.model}
                                     </div>
                                     <div className="text-xs text-fd-muted-foreground">
-                                        {product.name}
+                                        {product.series}
                                     </div>
                                     <div className="mt-1 text-[11px] text-fd-muted-foreground">
                                         {locale === 'zh' ? '核心参数' : 'Core Specs'}: {product.coreSpecs.join(' · ')}
+                                    </div>
+                                    <div className="mt-1 text-[11px] text-fd-muted-foreground">
+                                        {locale === 'zh' ? '通信接口' : 'Communication Interfaces'}: {product.communicationInterfaces.join(' / ')}
+                                    </div>
+                                    <div className="mt-1 text-[11px] text-fd-muted-foreground">
+                                        {locale === 'zh' ? '通信协议' : 'Communication Protocols'}: {product.communicationProtocols.join(' / ')}
                                     </div>
                                 </a>
                             ))}

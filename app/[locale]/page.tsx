@@ -33,9 +33,11 @@ export default async function HomePage({ params }: PageProps) {
     return {
       slug: product.slug,
       model: product.model,
-      name: localizedProduct.name,
+      series: localizedProduct.series,
       summary: localizedProduct.summary,
       coreSpecs: localizedProduct.coreSpecs,
+      communicationInterfaces: localizedProduct.communicationInterfaces,
+      communicationProtocols: localizedProduct.communicationProtocols,
     };
   });
   const latestNews = await getLatestNews(locale, 3);
@@ -131,6 +133,7 @@ export default async function HomePage({ params }: PageProps) {
             comingSoon={dict.home.products.comingSoon}
             products={localizedHomepageProducts}
             placeholderCount={placeholderCount}
+            labels={dict.common.labels}
           />
 
           <section className="rounded-2xl border border-fd-border bg-fd-card/90 p-8 shadow-md">

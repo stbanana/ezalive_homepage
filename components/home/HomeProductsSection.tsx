@@ -8,9 +8,17 @@ type Locale = 'zh' | 'en';
 type ProductCard = {
     slug: string;
     model: string;
-    name: string;
+    series: string;
     summary: string;
     coreSpecs: string[];
+    communicationInterfaces: string[];
+    communicationProtocols: string[];
+};
+
+type ProductLabels = {
+    coreSpecs: string;
+    communicationInterfaces: string;
+    communicationProtocols: string;
 };
 
 type HomeProductsSectionProps = {
@@ -21,6 +29,7 @@ type HomeProductsSectionProps = {
     comingSoon: string;
     products: ProductCard[];
     placeholderCount: number;
+    labels: ProductLabels;
 };
 
 export default function HomeProductsSection({
@@ -31,6 +40,7 @@ export default function HomeProductsSection({
     comingSoon,
     products,
     placeholderCount,
+    labels,
 }: HomeProductsSectionProps) {
     const sectionRef = useRef<HTMLElement | null>(null);
     const hasPathInitRef = useRef(false);
@@ -183,10 +193,10 @@ export default function HomeProductsSection({
                                 }}
                             />
 
-                            <div className="relative mb-3 flex items-center justify-between gap-3">
-                                <span className="text-lg font-extrabold tracking-[0.16em] text-fd-primary">
+                            <div className="relative mb-3 flex items-end justify-between gap-3">
+                                <div className={`font-bold text-fd-primary ${isFeatured ? 'text-2xl lg:text-3xl' : 'text-xl'}`}>
                                     {product.model}
-                                </span>
+                                </div>
                                 <span
                                     className={`rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] ${isFeatured
                                         ? 'border-fd-primary/55 text-fd-primary'
@@ -197,23 +207,16 @@ export default function HomeProductsSection({
                                 </span>
                             </div>
 
-                            <div className={`relative mb-2 font-bold text-fd-foreground ${isFeatured ? 'text-xl lg:text-2xl' : 'text-base'}`}>
-                                {product.name}
-                            </div>
+                            <div className="relative mb-2 text-sm text-fd-muted-foreground">{product.series}</div>
 
                             <p className={`relative mb-4 flex-1 text-fd-muted-foreground ${isFeatured ? 'text-base leading-7' : 'text-sm leading-6'}`}>
                                 {product.summary}
                             </p>
 
-                            <div className="relative mb-5 flex flex-wrap gap-2">
-                                {product.coreSpecs.map((spec) => (
-                                    <span
-                                        key={spec}
-                                        className="rounded-full border border-fd-border/80 bg-fd-background/70 px-2.5 py-1 text-[11px] text-fd-muted-foreground"
-                                    >
-                                        {spec}
-                                    </span>
-                                ))}
+                            <div className="relative mb-5 space-y-1 text-[11px] text-fd-muted-foreground">
+                                <div>{labels.coreSpecs}: {product.coreSpecs.join(' · ')}</div>
+                                {isFeatured ? <div>{labels.communicationInterfaces}: {product.communicationInterfaces.join(' / ')}</div> : null}
+                                {isFeatured ? <div>{labels.communicationProtocols}: {product.communicationProtocols.join(' / ')}</div> : null}
                             </div>
 
                             <div className="relative mt-auto inline-flex items-center gap-1 text-sm font-semibold text-fd-foreground transition group-hover:text-fd-primary">

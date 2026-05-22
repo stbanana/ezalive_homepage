@@ -77,7 +77,10 @@ export const en: Dictionary = {
     brandLogoAlt: "Brand logo",
     labels: {
       model: "Model",
+      series: "Series",
       coreSpecs: "Core Specs",
+      communicationInterfaces: "Communication Interfaces",
+      communicationProtocols: "Communication Protocols",
     },
   },
 };

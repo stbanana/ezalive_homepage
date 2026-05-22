@@ -34,7 +34,7 @@ export function baseOptions(locale: Locale): BaseLayoutProps {
     nav: {
       title: (
         <img
-          src="/品牌logo.png"
+          src="/icon.png"
           alt="brand logo"
           style={{
             height: 28,

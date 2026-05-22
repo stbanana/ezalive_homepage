@@ -71,7 +71,10 @@ export const zh = {
     brandLogoAlt: "品牌 logo",
     labels: {
       model: "型号",
+      series: "系列",
       coreSpecs: "核心参数",
+      communicationInterfaces: "通信接口",
+      communicationProtocols: "通信协议",
     },
   },
 };

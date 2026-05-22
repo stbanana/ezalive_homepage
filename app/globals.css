@@ -109,6 +109,14 @@ h3 {
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
 }
 
+#nd-nav > div {
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+
 #nd-nav nav {
   padding-left: 24px;
   padding-right: 24px;
@@ -129,6 +137,10 @@ h3 {
     left: 0 !important;
     right: 0 !important;
     transform: none;
+  }
+
+  #nd-nav > div {
+    border-radius: inherit;
   }
 
   #nd-nav nav {
