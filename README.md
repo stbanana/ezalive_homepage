@@ -37,19 +37,5 @@
 - 发布前请确保 out 目录下有 .nojekyll 文件（自动生成或手动添加）。
 - 推送后访问自定义域名或 GitHub Pages 地址。
 
-## 5. 切换环境时恢复 AI 上下文
-- 使用指令：
-  ```
-  先读取 AI/HANDOFF.md、AI/TODO.md、AI/SESSION_LOG.md 恢复上下文
-  ```
-- 如需查阅组件用法，参考 fumadocs-ui-docs（原 docs 文件夹）。
-
-## 6. 存储 AI 上下文
-- 告一段落后，使用指令：
-  ```
-  记录并同步 AI/HANDOFF.md、AI/TODO.md、AI/SESSION_LOG.md
-  ```
-- 建议每次阶段性开发结束后及时更新这三个文件，便于团队和 AI 恢复上下文。
-
 ---
-> 如有更多问题请查阅设计文档.md 或 fumadocs-ui-docs 文件夹。
+> 如有更多问题请查阅 CLAUDE.md 或设计文档.md。
