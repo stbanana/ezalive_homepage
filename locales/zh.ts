@@ -1,7 +1,7 @@
 export const zh = {
   home: {
     hero: {
-      title: "易启测 ezalive",
+      title: "易启测",
       description:
         "易启测专注于高精度电力电子测试平台，为研发与验证提供可靠支持。",
       exploreBtn: "了解产品",

@@ -58,6 +58,49 @@ components/            # 自定义组件
 - 响应式：桌面悬停下拉；移动端点击内联展开
 - 下拉面板防溢出定位（窄视口下夹紧右边界）
 
+## 布局规范：Carbon 2x Grid
+
+本项目 **hero 以外**的所有页面区块优先遵循 Carbon 2x Grid。
+
+### 实施方式
+
+Fumadocs UI 依赖 Tailwind，不引入 Carbon 组件，因此用 **Tailwind 实现 2x Grid 规格**：
+
+- `tailwind.config.cjs` 已扩展 `gridTemplateColumns: { '16': 'repeat(16, minmax(0, 1fr))' }`
+- 页面容器：`max-w-[1280px] px-4 lg:px-8`（Carbon 响应式 margin：16px / 32px）
+- 列网格：`grid-cols-4 md:grid-cols-8 lg:grid-cols-16`
+- 间距（gutter）：`gap-4 lg:gap-8`（16px → 32px，Carbon 规格）
+- 所有间距值取 8px 的倍数（Tailwind spacing 中偶数单位）
+
+### 断点（Carbon 2x Grid）
+
+| 名称 | 宽度 | 列数 | Gutter |
+|------|------|------|--------|
+| sm | 320px | 4 | 16px (`gap-4`) |
+| md | 672px | 8 | 16px (`gap-4`) |
+| lg | 1056px | 16 | 32px (`gap-8`) |
+| xlg | 1312px | 16 | 32px |
+| max | 1584px | 16 | 32px |
+
+> Tailwind 默认断点（768/1024px）与 Carbon 不同；目前不覆盖 Tailwind 断点，`md:` 对应 768px、`lg:` 对应 1024px，仅列数和 gutter 跟随 Carbon。
+
+### 首页各区块列分配
+
+| 区块 | 性质 | lg 列分配 |
+|------|------|-----------|
+| Hero | 动（跳过） | — |
+| Features | 静 | 3 × `col-span-5`（fr 均分） |
+| Products | 动 | featured `col-span-8`，others `col-span-4` |
+| Trust | 静 | 左 `col-span-7`，右 `col-span-9` |
+| News | 动 | 左 `col-span-7`，右 `col-span-9` |
+| Contact | 静 | 2 × `col-span-8`（fr 均分） |
+
+### Fumadocs 分层原则
+
+- Fumadocs `HomeLayout` 控制 navbar/shell，**不参与** 2x Grid
+- 内容页（`<main>`）是 Grid 的作用域
+- Docs 详情页（产品、新闻）内容宽度由 Fumadocs 管控，2x Grid 仅用于其内部子组件分列
+
 ## 组件规范
 
 - Carbon 主题变量统一 `--cds-` 前缀，**禁止硬编码色值**
