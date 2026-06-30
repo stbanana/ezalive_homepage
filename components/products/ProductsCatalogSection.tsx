@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState, useMemo } from 'react';
 import type { ProductCategory } from '@/data/products';
 
 type Locale = 'zh' | 'en';
@@ -29,7 +29,38 @@ type ProductsCatalogSectionProps = {
     labels: ProductLabels;
 };
 
+type ProductCatalogCardProps = {
+    product: ProductItem;
+    locale: Locale;
+    detailsText: string;
+    labels: ProductLabels;
+};
+
 const categoryOrder: ProductCategory[] = ['acdc', 'ac', 'dc'];
+
+function ProductCatalogCard({ product, locale, detailsText, labels }: ProductCatalogCardProps) {
+    return (
+        <a
+            href={`/${locale}/products/${product.slug}`}
+            className="animated-border group relative col-span-4 flex h-full flex-col overflow-hidden rounded-sm border border-fd-border/75 bg-fd-card/90 p-6 shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fd-primary md:col-span-4 lg:col-span-8"
+        >
+
+            <h2 className="relative text-xl font-bold text-fd-primary">{product.model}</h2>
+            <p className="relative mt-2 flex-1 text-sm leading-6 text-fd-muted-foreground">{product.summary}</p>
+            <div className="relative mt-4 space-y-1 text-[11px] text-fd-muted-foreground">
+                <div>{labels.coreSpecs}: {product.coreSpecs.join(' · ')}</div>
+                <div>{labels.communicationInterfaces}: {product.communicationInterfaces.join(' / ')}</div>
+                <div>{labels.communicationProtocols}: {product.communicationProtocols.join(' / ')}</div>
+            </div>
+            <div className="relative mt-4 inline-flex items-center gap-1 text-sm font-semibold text-fd-foreground transition group-hover:text-fd-primary">
+                {detailsText}
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+            </div>
+        </a>
+    );
+}
 
 export default function ProductsCatalogSection({
     locale,
@@ -56,7 +87,6 @@ export default function ProductsCatalogSection({
         } else {
             next.delete(category);
         }
-
         setSelectedCategories(next);
     };
 
@@ -101,7 +131,7 @@ export default function ProductsCatalogSection({
                     {locale === 'zh' ? '分类筛选' : 'CATEGORY FILTER'}
                 </div>
                 <div className="flex flex-wrap gap-2">
-                    <label className="inline-flex items-center gap-2 rounded-md border border-fd-border/70 px-3 py-1.5 text-sm">
+                    <label className="inline-flex items-center gap-2 rounded-sm border border-fd-border/70 px-3 py-1.5 text-sm">
                         <input
                             type="checkbox"
                             checked={allChecked}
@@ -117,7 +147,7 @@ export default function ProductsCatalogSection({
                     {categoryOrder.map((category) => (
                         <label
                             key={category}
-                            className="inline-flex items-center gap-2 rounded-md border border-fd-border/70 px-3 py-1.5 text-sm"
+                            className="inline-flex items-center gap-2 rounded-sm border border-fd-border/70 px-3 py-1.5 text-sm"
                         >
                             <input
                                 type="checkbox"
@@ -130,43 +160,30 @@ export default function ProductsCatalogSection({
                 </div>
             </section>
 
-            <div className="space-y-6">
+            <div className="space-y-8">
                 {groupedByCategoryAndSeries.map((categoryGroup) => (
-                    <section key={categoryGroup.category} className="space-y-3">
+                    <section key={categoryGroup.category} className="space-y-4">
                         <div className="flex items-center gap-3">
                             <h2 className="text-sm font-semibold text-fd-foreground">{categoryGroup.categoryLabel}</h2>
                             <div className="h-px flex-1 bg-fd-border/70" />
                         </div>
 
-                        <div className="space-y-4">
+                        <div className="space-y-6">
                             {categoryGroup.seriesGroups.map((seriesGroup) => (
-                                <article key={`${categoryGroup.category}-${seriesGroup.series}`} className="space-y-2">
+                                <article key={`${categoryGroup.category}-${seriesGroup.series}`} className="space-y-3">
                                     <div className="text-sm font-semibold text-fd-muted-foreground">
                                         <span className="inline-block border-l-2 border-fd-primary pl-2">{seriesGroup.series}</span>
                                     </div>
 
-                                    <div className="grid gap-6 md:grid-cols-2">
+                                    <div className="grid grid-cols-4 gap-4 md:grid-cols-8 lg:grid-cols-16 lg:gap-8">
                                         {seriesGroup.items.map((product) => (
-                                            <a
+                                            <ProductCatalogCard
                                                 key={`${product.slug}-${product.model}`}
-                                                className="group flex h-full flex-col rounded-2xl border border-fd-primary/40 bg-fd-card/90 p-6 shadow-lg transition-all hover:scale-[1.03] hover:border-fd-primary hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fd-primary"
-                                                href={`/${locale}/products/${product.slug}`}
-                                            >
-                                                <h2 className="text-xl font-semibold text-fd-foreground">{product.model}</h2>
-                                                <p className="mt-2 text-sm text-fd-muted-foreground">{product.summary}</p>
-                                                <div className="mt-2 text-xs text-fd-muted-foreground">
-                                                    {labels.coreSpecs}: {product.coreSpecs.join(' · ')}
-                                                </div>
-                                                <div className="mt-1 text-xs text-fd-muted-foreground">
-                                                    {labels.communicationInterfaces}: {product.communicationInterfaces.join(' / ')}
-                                                </div>
-                                                <div className="mt-1 text-xs text-fd-muted-foreground">
-                                                    {labels.communicationProtocols}: {product.communicationProtocols.join(' / ')}
-                                                </div>
-                                                <div className="mt-4 inline-flex items-center text-sm font-medium text-fd-foreground transition-colors group-hover:text-fd-primary">
-                                                    {detailsText} →
-                                                </div>
-                                            </a>
+                                                product={product}
+                                                locale={locale}
+                                                detailsText={detailsText}
+                                                labels={labels}
+                                            />
                                         ))}
                                     </div>
                                 </article>
