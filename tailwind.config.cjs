@@ -11,6 +11,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      gridTemplateColumns: {
+        '16': 'repeat(16, minmax(0, 1fr))',
+      },
       colors: {
         // 直接映射到 Carbon Design System 的 CSS 变量
         'fd-primary': 'var(--cds-interactive-primary)',

@@ -93,11 +93,11 @@ export default async function HomePage({ params }: PageProps) {
       <div
         className="pointer-events-none absolute inset-0 -z-10 opacity-60"
         style={{
-          backgroundImage: `radial-gradient(circle at top, color-mix(in oklab, var(--color-fd-primary) 12%, transparent) 0%, transparent 55%)`
+          backgroundImage: `radial-gradient(ellipse 80% 50% at 50% 0%, color-mix(in oklab, var(--color-fd-primary) 12%, transparent) 0%, transparent 100%)`
         }}
       />
 
-      <main className="relative mx-auto w-full max-w-6xl px-6 py-12">
+      <main className="relative mx-auto w-full max-w-[1280px] px-4 lg:px-8 py-12">
         <LanguageNotice locale={locale} />
 
         <div className="space-y-10">
@@ -110,16 +110,13 @@ export default async function HomePage({ params }: PageProps) {
             brandLogoAlt={dict.common.brandLogoAlt}
           />
 
-          <section className="rounded-2xl border border-fd-border bg-fd-card/90 p-8 shadow-md">
-            <div className="grid gap-6 md:grid-cols-3">
-              {dict.home.features.map((item) => (
-                <div key={item.title} className="rounded-xl border border-fd-border/70 bg-fd-background/80 p-5">
-                  <h3 className="text-base font-semibold">
-                    {item.title}
-                  </h3>
-                  <p className="mt-2 text-sm text-fd-muted-foreground">
-                    {item.description}
-                  </p>
+          <section className="rounded-sm border border-fd-border bg-fd-card/90 p-6 lg:p-8 shadow-md">
+            <div className="grid gap-8 md:grid-cols-3 lg:gap-0 lg:divide-x lg:divide-fd-border/60">
+              {dict.home.features.map((item, i) => (
+                <div key={item.title} className="lg:px-8 first:lg:pl-0 last:lg:pr-0">
+                  <div className="mb-4 h-px w-8 bg-fd-primary" />
+                  <h3 className="text-base font-semibold leading-6">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-7 text-fd-muted-foreground">{item.description}</p>
                 </div>
               ))}
             </div>
@@ -136,28 +133,27 @@ export default async function HomePage({ params }: PageProps) {
             labels={dict.common.labels}
           />
 
-          <section className="rounded-2xl border border-fd-border bg-fd-card/90 p-8 shadow-md">
-            <div className="grid gap-8 md:grid-cols-[0.95fr_1.05fr] md:items-start">
-              <div className="space-y-4">
-                <h2 className="text-3xl leading-tight md:text-4xl">{trustTitle}</h2>
+          <section className="rounded-sm border border-fd-border bg-fd-card/90 p-6 lg:p-8 shadow-md">
+            <div className="grid gap-6 lg:gap-12 md:grid-cols-[0.95fr_1.05fr] md:items-start lg:grid-cols-16">
+              <div className="space-y-4 lg:col-span-7">
+                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-fd-primary/70">
+                  {locale === 'zh' ? '我们的承诺' : 'Our Commitment'}
+                </p>
+                <h2 className="text-3xl font-light leading-snug md:text-4xl lg:text-5xl">{trustTitle}</h2>
                 <p className="text-base leading-7 text-fd-foreground/90">{trustLead}</p>
                 <p className="text-sm leading-7 text-fd-muted-foreground">{trustBody}</p>
               </div>
-              <div className="grid gap-4">
+              <div className="grid gap-3 lg:col-span-9">
                 {trustPoints.map((item, index) => (
                   <article
                     key={item.title}
-                    className="rounded-xl border border-fd-border/70 bg-fd-background/75 px-5 py-4"
+                    className="border-l-2 border-fd-border/60 bg-fd-background/60 px-5 py-4 transition-all duration-200"
                   >
-                    <div className="flex items-start gap-3">
-                      <span className="mt-0.5 inline-grid h-6 w-6 place-items-center rounded-full border border-fd-border/80 text-[11px] font-semibold text-fd-muted-foreground">
-                        0{index + 1}
-                      </span>
-                      <div className="space-y-1.5">
-                        <h3 className="text-base font-semibold leading-6">{item.title}</h3>
-                        <p className="text-sm leading-6 text-fd-muted-foreground">{item.text}</p>
-                      </div>
+                    <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-fd-primary/60">
+                      0{index + 1}
                     </div>
+                    <h3 className="text-base font-semibold leading-6">{item.title}</h3>
+                    <p className="mt-1 text-sm leading-6 text-fd-muted-foreground">{item.text}</p>
                   </article>
                 ))}
               </div>
@@ -173,25 +169,30 @@ export default async function HomePage({ params }: PageProps) {
             items={newsItems}
           />
 
-          <section id="contact" className="rounded-2xl border border-fd-border bg-fd-card/90 p-8 shadow-md">
-            <h2>
-              {dict.home.contact.title}
-            </h2>
-            <p className="mt-2 text-sm text-fd-muted-foreground">
-              {dict.home.contact.description}
-            </p>
-            <div className="mt-6 grid gap-4 md:grid-cols-2">
-              <div className="rounded-xl border border-fd-border/70 bg-fd-background/80 p-4">
-                <div className="text-sm text-fd-muted-foreground">
-                  {dict.home.contact.hotline}
-                </div>
-                <div className="mt-1 text-base font-semibold">400-800-1234</div>
+          <section id="contact" className="rounded-sm border border-fd-border bg-fd-card/90 p-8 shadow-md">
+            <div className="grid gap-8 lg:grid-cols-16 lg:items-center">
+              <div className="space-y-3 lg:col-span-9">
+                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-fd-primary/70">
+                  {locale === 'zh' ? '联系我们' : 'Get in Touch'}
+                </p>
+                <h2>{dict.home.contact.title}</h2>
+                <p className="text-sm leading-7 text-fd-muted-foreground">
+                  {dict.home.contact.description}
+                </p>
               </div>
-              <div className="rounded-xl border border-fd-border/70 bg-fd-background/80 p-4">
-                <div className="text-sm text-fd-muted-foreground">
-                  {dict.home.contact.email}
+              <div className="grid gap-4 lg:col-span-7">
+                <div className="rounded-sm border border-fd-border/70 bg-fd-background/80 p-5">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.1em] text-fd-muted-foreground">
+                    {dict.home.contact.hotline}
+                  </div>
+                  <div className="mt-2 text-xl font-semibold tracking-tight">400-800-1234</div>
                 </div>
-                <div className="mt-1 text-base font-semibold">hello@ezalive.com</div>
+                <div className="rounded-sm border border-fd-border/70 bg-fd-background/80 p-5">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.1em] text-fd-muted-foreground">
+                    {dict.home.contact.email}
+                  </div>
+                  <div className="mt-2 text-xl font-semibold tracking-tight">hello@ezalive.com</div>
+                </div>
               </div>
             </div>
           </section>

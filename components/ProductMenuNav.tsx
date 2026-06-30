@@ -165,7 +165,7 @@ export default function ProductMenuNav({ locale }: { locale: string }) {
 
       {open && !useInlineMenu && (
         <div
-          className="absolute top-full z-50 mt-2 rounded-xl border border-fd-border bg-fd-background p-4 shadow-2xl animate-in fade-in"
+          className="absolute top-full z-50 mt-2 rounded-sm border border-fd-border bg-fd-background p-4 shadow-2xl"
           style={{ left: panelStyle.left, width: panelStyle.width }}
         >
           <div className="grid grid-cols-[140px_1fr] gap-4">
@@ -176,7 +176,7 @@ export default function ProductMenuNav({ locale }: { locale: string }) {
                   type="button"
                   onMouseEnter={() => setActiveGroup(index)}
                   onFocus={() => setActiveGroup(index)}
-                  className={`text-left text-xs font-semibold px-2 py-2 rounded-md transition ${index === safeActiveGroup ? 'bg-fd-accent/70 text-fd-foreground' : 'text-fd-muted-foreground hover:text-fd-foreground hover:bg-fd-accent/40'}`}
+                  className={`text-left text-xs font-semibold px-2 py-2 rounded-sm transition ${index === safeActiveGroup ? 'bg-fd-accent/70 text-fd-foreground' : 'text-fd-muted-foreground hover:text-fd-foreground hover:bg-fd-accent/40'}`}
                 >
                   {group.label}
                 </button>
@@ -188,17 +188,17 @@ export default function ProductMenuNav({ locale }: { locale: string }) {
               ) : (
                 <div className="space-y-4">
                   {activeSeriesGroups.map((seriesGroup) => (
-                    <section key={seriesGroup.series} className="space-y-2 rounded-lg border border-fd-border/60 bg-fd-background/45 p-2">
+                    <section key={seriesGroup.series} className="space-y-2 rounded-sm border border-fd-border/60 bg-fd-background/45 p-2">
                       <div className="px-1 py-1 text-xs font-semibold tracking-[0.06em] text-fd-foreground">
                         <span className="inline-block border-l-2 border-fd-primary pl-2">{seriesGroup.series}</span>
                       </div>
-                      <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+                      <div className="grid grid-cols-4 gap-4 md:grid-cols-8">
                         {seriesGroup.items.map((p) => (
                           <Link
                             key={p.key}
                             href={p.url}
                             onClick={() => setOpen(false)}
-                            className="block rounded-xl border border-fd-primary/40 bg-fd-card/90 px-4 py-3 shadow-sm hover:border-fd-primary transition-all"
+                            className="col-span-4 md:col-span-4 block rounded-sm border border-fd-border/75 bg-fd-card/90 px-4 py-3 shadow-sm hover:border-fd-primary/60 transition-colors"
                           >
                             <div className="text-sm font-bold text-fd-primary mb-1">{p.model}</div>
                             <div className="mt-1 text-[11px] text-fd-muted-foreground">
@@ -223,7 +223,7 @@ export default function ProductMenuNav({ locale }: { locale: string }) {
       )}
 
       {open && useInlineMenu && (
-        <div className="mt-2 w-full min-w-0 rounded-xl border border-fd-border bg-fd-background p-3 shadow-lg">
+        <div className="mt-2 w-full min-w-0 rounded-sm border border-fd-border bg-fd-background p-3 shadow-lg">
           <Link
             href={`/${locale}/products`}
             onClick={() => setOpen(false)}
@@ -238,7 +238,7 @@ export default function ProductMenuNav({ locale }: { locale: string }) {
                 key={group.key}
                 type="button"
                 onClick={() => setActiveGroup(index)}
-                className={`rounded-md px-3 py-1.5 text-xs font-semibold transition ${index === safeActiveGroup ? 'bg-fd-accent/70 text-fd-foreground' : 'border border-fd-border/80 text-fd-muted-foreground hover:border-fd-primary/40 hover:text-fd-foreground'}`}
+                className={`rounded-sm px-3 py-1.5 text-xs font-semibold transition ${index === safeActiveGroup ? 'bg-fd-accent/70 text-fd-foreground' : 'border border-fd-border/80 text-fd-muted-foreground hover:border-fd-primary/40 hover:text-fd-foreground'}`}
               >
                 {group.label}
               </button>
@@ -250,17 +250,17 @@ export default function ProductMenuNav({ locale }: { locale: string }) {
           ) : (
             <div className="space-y-3">
               {activeSeriesGroups.map((seriesGroup) => (
-                <section key={seriesGroup.series} className="space-y-2 rounded-lg border border-fd-border/60 bg-fd-background/45 p-2">
+                <section key={seriesGroup.series} className="space-y-2 rounded-sm border border-fd-border/60 bg-fd-background/45 p-2">
                   <div className="px-1 py-1 text-xs font-semibold tracking-[0.06em] text-fd-foreground">
                     <span className="inline-block border-l-2 border-fd-primary pl-2">{seriesGroup.series}</span>
                   </div>
-                  <div className="grid gap-3">
+                  <div className="grid grid-cols-4 gap-4">
                     {seriesGroup.items.map((p) => (
                       <Link
                         key={p.key}
                         href={p.url}
                         onClick={() => setOpen(false)}
-                        className="block rounded-xl border border-fd-primary/40 bg-fd-card/90 px-4 py-3 shadow-sm hover:border-fd-primary transition-all"
+                        className="col-span-4 block rounded-sm border border-fd-border/75 bg-fd-card/90 px-4 py-3 shadow-sm hover:border-fd-primary/60 transition-colors"
                       >
                         <div className="text-sm font-bold text-fd-primary mb-1">{p.model}</div>
                         <div className="mt-1 text-[11px] text-fd-muted-foreground">
