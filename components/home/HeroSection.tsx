@@ -190,7 +190,7 @@ export default function HeroSection({
                 return;
             }
 
-            gsap.set('[data-hero-title], [data-hero-desc], [data-hero-cta]', { opacity: 0, y: 18 });
+            gsap.set('[data-hero-logo], [data-hero-title], [data-hero-desc], [data-hero-cta]', { opacity: 0, y: 18 });
             gsap.set('[data-hero-scope-card]', { opacity: 0, y: 10 });
             gsap.set(trail, { autoAlpha: 0 });
 
@@ -224,6 +224,10 @@ export default function HeroSection({
                 .to({}, { duration: 0.6 });
 
             // — Text entrance, parallel with boot (absolute positions) —
+            tl.add(
+                gsap.fromTo('[data-hero-logo]', { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.52, ease: 'power3.out' }),
+                1.0,
+            );
             tl.add(
                 gsap.fromTo('[data-hero-title]', { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.72, ease: 'power3.out' }),
                 1.4,
@@ -284,6 +288,7 @@ export default function HeroSection({
                 transformOrigin: 'center',
                 duration: 0.45,
                 ease: 'power2.out',
+                overwrite: 'auto',
             });
         };
 
@@ -292,17 +297,19 @@ export default function HeroSection({
             gsap.to(visual, {
                 x: 0, y: 0, rotateY: 0, rotateX: 0,
                 duration: 0.5, ease: 'power2.out',
+                overwrite: 'auto',
             });
         };
 
-        root.addEventListener('mousemove', onMouseMove);
-        root.addEventListener('mouseleave', onMouseLeave);
+        visual.addEventListener('mousemove', onMouseMove);
+        visual.addEventListener('mouseleave', onMouseLeave);
 
         return () => {
             window.removeEventListener('pageshow', onPageShow);
-            root.removeEventListener('mousemove', onMouseMove);
-            root.removeEventListener('mouseleave', onMouseLeave);
+            visual.removeEventListener('mousemove', onMouseMove);
+            visual.removeEventListener('mouseleave', onMouseLeave);
             typeLoopRef.current?.kill();
+            gsap.killTweensOf(visual);
             ctx.revert();
         };
     }, []);
@@ -316,7 +323,7 @@ export default function HeroSection({
                 {/* Left: text content */}
                 <div className="space-y-6">
                     <img
-                        data-hero-title
+                        data-hero-logo
                         src="/品牌logo.png"
                         alt={brandLogoAlt}
                         className="h-10 w-auto object-contain"
